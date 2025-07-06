@@ -74,7 +74,7 @@ const FAQs = () => {
                     {faqData.map((item, index) => (
                         <div key={index} className="flex justify-between items-start gap-4 ">
                             <div className="mt-3">
-                                <GoQuestion color="#286a25" size={25} />
+                                <GoQuestion color="#8F00FF" size={25} />
                             </div>
                             <div className="w-full ">
                                 <p className="text-base font-medium border-b rounded-xl py-2 px-4 flex items-center gap-8 bg-slate-50">
@@ -90,7 +90,7 @@ const FAQs = () => {
                                     onClick={() => {
                                         setEditModal(true);
                                     }}
-                                    className="text-2xl cursor-pointer text-[#286a25]"
+                                    className="text-2xl cursor-pointer text-[#8F00FF]"
                                 />
                                 <RxCross2
                                     size={24}

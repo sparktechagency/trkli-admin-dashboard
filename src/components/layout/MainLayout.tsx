@@ -17,8 +17,13 @@ const MainLayout: React.FC = () => {
             style={{
                 height: '100vh',
             }}
-        >
-            <Sidebar />
+        > 
+        <div className='bg-[#f4f4f4] h-full py-4 ps-4'> 
+  
+           <Sidebar />
+           
+        </div>
+ 
             <Layout>
                 {/* header */}
 
@@ -29,7 +34,7 @@ const MainLayout: React.FC = () => {
                             padding: 0,
                             minHeight: '50vh',
                             width: '100%',
-                            background: '#F6F6F6',
+                            background: '#f4f4f4',
                             borderRadius: borderRadiusLG,
                         }} 
                         className=''

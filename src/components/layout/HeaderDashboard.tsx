@@ -8,7 +8,7 @@ const HeaderDashboard = () => {
         <Header
             style={{
                 height: 80,
-                background: 'white',
+                background: '#f4f4f4',
                 width: '100%',
                 overflow: 'hidden',
             }}

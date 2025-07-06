@@ -49,7 +49,7 @@ const UserChart = () => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="totalUsers" fill="#286a25" />
+                    <Bar dataKey="totalUsers" fill="#8F00FF" />
                     <Bar dataKey="newUsers" fill="#5C450D" />
                 </BarChart>
             </ResponsiveContainer>

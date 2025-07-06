@@ -1,4 +1,4 @@
-import { ConfigProvider, Layout, Menu, MenuProps } from 'antd';
+          import { ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import { TSidebarItem } from '../../utils/generateSidebarItems';
 import sidebarItems from '../../utils/sidebarItems';
 import { Link, useLocation } from 'react-router-dom';
@@ -44,12 +44,12 @@ const Sidebar = () => {
                 },
                 components: {
                     Menu: {
-                        itemActiveBg: '#286a25',
+                        itemActiveBg: '#8F00FF',
                         itemSelectedColor: '#fff',
                         itemBorderRadius: '10px 10px 10px 10px' as any,
                         itemHeight: 45,
                         itemMarginBlock: 12,
-                        itemSelectedBg: '#286a25',
+                        itemSelectedBg: '#8F00FF',
                     },
                 },
             }}
@@ -58,7 +58,11 @@ const Sidebar = () => {
                 width={250}
                 theme="light"
                 breakpoint="lg"
-                collapsedWidth="0"
+                collapsedWidth="0" 
+                style={{ 
+                    borderRadius: '30px', 
+                    height: '97vh',
+                }}
             >
                 {/* logo of the website */}
                 <Link to="/">
@@ -67,9 +71,10 @@ const Sidebar = () => {
                             margin: '0 20px',
                             padding: '20px 0',
                         }}
-                        className=' flex items-center justify-center'
+                        className=' flex items-center justify-start gap-1'
                     >
-                        <img src="/logo.png" alt="" className=' w-[100px] h-[100px] ' />
+                        <img src="/logo.png" alt="" className=' w-8 h-8 ' /> 
+                        <p className=' text-[#050505] text-3xl font-bold  '> trkli</p>
                     </div>
                 </Link>
 

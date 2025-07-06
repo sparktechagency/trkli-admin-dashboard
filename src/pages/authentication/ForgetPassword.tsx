@@ -13,7 +13,7 @@ const ForgetPassword = () => {
         <ConfigProvider
             theme={{
                 token: {
-                    colorPrimary: '#286a25',
+                    colorPrimary: '#8F00FF',
 
                     colorBgContainer: '#F1F4F9',
                 },
