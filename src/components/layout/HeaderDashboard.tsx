@@ -7,7 +7,7 @@ const HeaderDashboard = () => {
     return (
         <Header
             style={{
-                height: 80,
+                height: 70,
                 background: '#f4f4f4',
                 width: '100%',
                 overflow: 'hidden',

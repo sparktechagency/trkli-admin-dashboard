@@ -1,9 +1,9 @@
-          import { ConfigProvider, Layout, Menu, MenuProps } from 'antd';
+import { ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import { TSidebarItem } from '../../utils/generateSidebarItems';
 import sidebarItems from '../../utils/sidebarItems';
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-const { Sider } = Layout; 
+const { Sider } = Layout;
 
 const Sidebar = () => {
     const location = useLocation();
@@ -11,9 +11,9 @@ const Sidebar = () => {
 
     const handleOpenChange = (keys: string[]) => {
         setOpenKeys(keys);
-    }; 
+    };
 
-        const sidebarItemsGenerator = (items: TSidebarItem[]): MenuProps['items'] => {
+    const sidebarItemsGenerator = (items: TSidebarItem[]): MenuProps['items'] => {
         return items.map((item) => {
             if (item.children) {
                 return {
@@ -21,7 +21,7 @@ const Sidebar = () => {
                     icon: item.icon,
                     label: item.label,
                     children: item.children.map((child) => ({
-                        key: `/${child.path}`, 
+                        key: `/${child.path}`,
                         icon: child.icon,
                         label: <Link to={`/${child.path}`}>{child.label}</Link>,
                     })),
@@ -34,7 +34,7 @@ const Sidebar = () => {
                 label: <Link to={`/${item.path}`}>{item.label}</Link>,
             };
         });
-    }; 
+    };
 
     return (
         <ConfigProvider
@@ -46,7 +46,7 @@ const Sidebar = () => {
                     Menu: {
                         itemActiveBg: '#8F00FF',
                         itemSelectedColor: '#fff',
-                        itemBorderRadius: '10px 10px 10px 10px' as any,
+                        itemBorderRadius: '50px' as any,
                         itemHeight: 45,
                         itemMarginBlock: 12,
                         itemSelectedBg: '#8F00FF',
@@ -58,9 +58,9 @@ const Sidebar = () => {
                 width={250}
                 theme="light"
                 breakpoint="lg"
-                collapsedWidth="0" 
-                style={{ 
-                    borderRadius: '30px', 
+                collapsedWidth="0"
+                style={{
+                    borderRadius: '30px',
                     height: '97vh',
                 }}
             >
@@ -73,7 +73,7 @@ const Sidebar = () => {
                         }}
                         className=' flex items-center justify-start gap-1'
                     >
-                        <img src="/logo.png" alt="" className=' w-8 h-8 ' /> 
+                        <img src="/logo.png" alt="" className=' w-8 h-8 ' />
                         <p className=' text-[#050505] text-3xl font-bold  '> trkli</p>
                     </div>
                 </Link>

@@ -1,53 +1,79 @@
 
+import { BsCurrencyDollar } from 'react-icons/bs';
 import { HiCurrencyDollar, HiMiniUserGroup } from 'react-icons/hi2';
 import { IoBookmarks } from 'react-icons/io5';
+import { MdDevicesOther, MdOutlineProductionQuantityLimits } from 'react-icons/md';
 
 const DashboardStats = () => {
     const data = [
         {
             name: 'Total User',
-            count: '20.10K',
-            icon: <HiMiniUserGroup color="#8F00FF" size={35} />,
+            icon: <HiMiniUserGroup color="#8F00FF" size={20} />,
+            time: "13 dec 2023",
+            total: "20.10K",
+            daily: "1.2K",
             bgColor: '#fff',
             textColor: '#8F00FF',
         },
         {
-            name: 'Total Earning',
-            count: '920',
-            icon: <HiCurrencyDollar color="#8F00FF" size={36} />,
+            name: 'Total Selling Device',
+            icon: <MdDevicesOther color="#8F00FF" size={20} />,
+            time: "13 dec 2023",
+            total: "20.10K",
+            daily: "1.2K",
             textColor: '#3F0D47',
             bgColor: '#fff',
         },
         {
-            name: 'Total Booking',
-            count: '150.10K',
-            icon: <IoBookmarks color="#8F00FF" size={30} />,
+            name: 'Total Selling product',
+            icon: <MdOutlineProductionQuantityLimits color="#8F00FF" size={20} />,
+            time: "13 dec 2023",
+            total: "20.10K",
+            daily: "1.2K",
             textColor: '#DAA520',
+            bgColor: '#fff',
+        },
+        {
+            name: 'Total Earning',
+            icon: <BsCurrencyDollar color="#8F00FF" size={20} />,
+            time: "13 dec 2023",
+            total: "20.10K",
+            daily: "1.2K",
+            textColor: '#3F0D47',
             bgColor: '#fff',
         },
     ];
 
     return (
         <div>
-            <div className="grid grid-cols-3 gap-8 items-center">
+            <div className="grid grid-cols-4 gap-8 items-center">
                 {data.map((item, index) => (
-                    <div key={index} className="bg-white shadow-md rounded-xl p-8 border flex items-center gap-3">
-                        <div className={`rounded-full flex items-center justify-center`}>
-                            {item?.icon}
-                        </div>
-                        <div className="flex-1 flex justify-between items-center">
-                            <p className="flex items-center justify-center text-lg text-[#242424] font-medium">
-                                {item.name}
-                            </p>
-                            <div>
-                                <p
-                                    style={{ color: item.textColor }} // Inline style for text color
-                                    className="text-3xl font-bold"
-                                >
-                                    {item.count} +
+                    <div key={index} className="bg-white shadow-md rounded-2xl p-4  flex  flex-col  gap-2">
+                        <div className='flex items-center gap-3'>
+                            <div className={`rounded-full flex items-center justify-center bg-[#F4E6FF] p-1.5`}>
+                                {item?.icon}
+                            </div>
+                            <div className="">
+                                <p className="flex items-center justify-center text-lg text-[#242424] font-medium">
+                                    {item.name}
                                 </p>
                             </div>
+                        </div> 
+
+                        <p className=' text-[#999999] text-[14px]  '>{item?.time} </p>
+
+                        <div className=' flex items-center justify-between'>
+                            <p className="text-base font-medium flex items-center gap-2" >
+                                <span> Total: </span> <span style={{ color: item.textColor }} className='font-semibold' >  {item.total}  </span>
+                            </p>
+
+                            <p className="text-base font-medium flex items-center gap-1" >
+                                <span> Daily: </span> <span style={{ color: item.textColor }} className='font-semibold' >  {item.daily}  </span>
+                            </p>
                         </div>
+
+
+
                     </div>
                 ))}
             </div>

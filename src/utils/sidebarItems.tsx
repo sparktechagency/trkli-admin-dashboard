@@ -1,9 +1,8 @@
 import { BiCategory } from 'react-icons/bi';
 import { TSidebarItem } from './generateSidebarItems';
-import {  AiOutlineDollarCircle, AiOutlineQuestionCircle, AiOutlineStar } from 'react-icons/ai';
+import {  AiOutlineDollarCircle, AiOutlineFileSearch, AiOutlineQuestionCircle, AiOutlineStar } from 'react-icons/ai';
 import { IoBarChartOutline } from 'react-icons/io5';
 import { TbLogout, TbMessage2Check } from 'react-icons/tb';
-import { HiOutlineUserGroup } from 'react-icons/hi2';
 import { CiViewList } from 'react-icons/ci'; 
 import { PiBuildingOffice } from 'react-icons/pi';
 import { BsExclamationOctagon } from 'react-icons/bs';
@@ -16,10 +15,10 @@ const sidebarItems: TSidebarItem[] = [
         icon: <IoBarChartOutline size={24} />,
     },
     {
-        key: 'users',
-        label: 'User Management',
-        path: 'users',
-        icon: <HiOutlineUserGroup size={24} />,
+        key: 'track-trkli',
+        label: 'Track Trkli',
+        path: 'track-trkli',
+        icon: <AiOutlineFileSearch size={24} />,
     },
     {
         key: 'services',
