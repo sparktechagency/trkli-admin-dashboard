@@ -6,6 +6,7 @@ import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 import { FiSearch } from 'react-icons/fi';
 import { Checkbox } from 'antd';
 import { BsInfoCircle } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 
 const data = [
   {
@@ -111,6 +112,12 @@ const data = [
 
 ];
 
+
+
+const TrackTrkli = () => { 
+const navigate = useNavigate(); 
+
+
 const columns: ColumnsType<any> = [
   {
     title: <Checkbox />,
@@ -155,15 +162,14 @@ const columns: ColumnsType<any> = [
     key: 'action',
     render: () => (
       <div className=' flex items-center gap-2'>
-        <p> <BsInfoCircle size={22} color="#A1A1A1" style={{ cursor: 'pointer' }} /></p>
+        <p onClick={()=>navigate("/track-details")}> <BsInfoCircle size={22} color="#A1A1A1" style={{ cursor: 'pointer' }} /></p>
         <p>  <IoLockClosedOutline size={22} color="#A1A1A1" style={{ cursor: 'pointer' }} /> </p>
       </div>
     ),
     // align: 'center', 
   },
-];
+]; 
 
-const TrackTrkli = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-5">
