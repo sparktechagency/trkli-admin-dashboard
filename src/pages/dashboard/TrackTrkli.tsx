@@ -1,6 +1,6 @@
 'use client';
 
-import { Table, Input, DatePicker, Button, Avatar } from 'antd';
+import { Table, Input, DatePicker, Avatar } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 import { FiSearch } from 'react-icons/fi';
@@ -174,7 +174,7 @@ const columns: ColumnsType<any> = [
     <div>
       <div className="flex justify-between items-center mb-5">
 
-        <h1 className="text-2xl text-[#080808] font-semibold">Track Trkli</h1>
+        <h1 className="text-2xl text-[#080808] font-medium">Track Trkli</h1>
 
         <div className="flex items-center gap-2 justify-end ">
           <div className=' flex items-center gap-2 '>

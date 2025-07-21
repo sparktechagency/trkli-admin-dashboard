@@ -1,9 +1,8 @@
-import { BiCategory } from 'react-icons/bi';
+
 import { TSidebarItem } from './generateSidebarItems';
-import {  AiOutlineDollarCircle, AiOutlineFileSearch, AiOutlineQuestionCircle, AiOutlineStar } from 'react-icons/ai';
+import {  AiOutlineDollar, AiOutlineDollarCircle, AiOutlineFileSearch, AiOutlineProduct, AiOutlineQuestionCircle, AiOutlineStar } from 'react-icons/ai';
 import { IoBarChartOutline } from 'react-icons/io5';
 import { TbLogout, TbMessage2Check } from 'react-icons/tb';
-import { CiViewList } from 'react-icons/ci'; 
 import { PiBuildingOffice } from 'react-icons/pi';
 import { BsExclamationOctagon } from 'react-icons/bs';
 
@@ -21,16 +20,16 @@ const sidebarItems: TSidebarItem[] = [
         icon: <AiOutlineFileSearch size={24} />,
     },
     {
-        key: 'services',
-        label: 'Services',
-        path: 'services',
-        icon: <CiViewList size={24} />,
+        key: 'selling-details',
+        label: 'Selling Details',
+        path: 'selling-details',
+        icon: <AiOutlineDollar size={24} />,
     },
     {
-        key: 'create-class',
-        label: 'Create Class',
-        path: 'create-class',
-        icon: <BiCategory size={24} />,
+        key: 'product-details',
+        label: 'Product Details',
+        path: 'product-details',
+        icon: <AiOutlineProduct size={24} />,
     },
     {
         key: 'booking-history',

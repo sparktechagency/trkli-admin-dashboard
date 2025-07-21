@@ -1,7 +1,8 @@
 // TrackDetails.tsx
 
-import { Table,  Avatar, Divider } from 'antd';
+import { Table, Divider } from 'antd';
 import { FaRegUser } from 'react-icons/fa';
+import { FiExternalLink } from 'react-icons/fi';
 import { IoMdArrowBack } from 'react-icons/io';
 import { LuLayoutDashboard } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ const TrackDetails = () => {
       dataIndex: 'name',
       render: (text: string) => (
         <div className="flex items-center gap-2">
-          <Avatar src="/user.png" size="small" />
+          <img src="/user.svg"  height={45} width={45} />
           <span>{text}</span>
         </div>
       ),
@@ -50,11 +51,7 @@ const TrackDetails = () => {
     {
       title: 'Action',
       render: () => (
-        <a href="#" className="text-blue-500 hover:underline">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M17.414 2.586a2 2 0 010 2.828l-9.293 9.293a1 1 0 01-.39.242l-4 1.5a1 1 0 01-1.27-1.27l1.5-4a1 1 0 01.242-.39l9.293-9.293a2 2 0 012.828 0zM14 5l1 1-9.293 9.293-1.5.5.5-1.5L14 5z" />
-          </svg>
-        </a>
+   <div className=' ms-3'> <FiExternalLink color='#606060' size={22}  /></div>
       ),
     },
   ];

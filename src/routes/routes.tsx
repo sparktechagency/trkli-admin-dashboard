@@ -13,27 +13,29 @@ import VerifyOtp from '../pages/authentication/VerifyOtp';
 import NewPassword from '../pages/authentication/NewPassword';
 import Profile from '../pages/dashboard/profile/Profile';
 import Privacy from '../pages/dashboard/Privacy';
-import CreateClasses from '../pages/dashboard/CreateClasses';
-import Services from '../pages/dashboard/Services';
 import BookingHistory from '../pages/dashboard/BookingHistory';
 import Transactions from '../pages/dashboard/Transactions';
 import Companies from '../pages/dashboard/Companies';
 import WhyChoose from '../pages/dashboard/WhyChoose';
 import TrackTrkli from '../pages/dashboard/TrackTrkli';
 import TrackDetails from '../pages/dashboard/TrackDetails';
+import SellingDetails from '../pages/dashboard/SellingDetails';
+import OrderDetails from '../pages/dashboard/OrderDetails';
+import ProductDetails from '../pages/dashboard/ProductDetails';
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <App />,
-        errorElement: <ErrorPage />,
+        errorElement: <ErrorPage />, 
         children: [
             { path: '', element: <Dashboard /> },
             { path: 'track-trkli', element: <TrackTrkli /> },
-            { path: 'track-details', element: <TrackDetails /> },
+            { path: 'track-details', element: <TrackDetails /> }, 
+            {path:"order-details", element:<OrderDetails/>},
             { path: 'booking-history', element: <BookingHistory /> },
-            { path: 'services', element: <Services /> },
-            { path: 'create-class', element: <CreateClasses /> },
+            { path: 'selling-details', element: <SellingDetails /> },
+            { path: 'product-details', element: <ProductDetails /> },
             { path: 'reviews', element: <Review /> }, 
             { path: 'companies', element: <Companies /> },
             { path: 'why-choose', element: <WhyChoose /> },
