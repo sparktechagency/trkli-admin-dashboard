@@ -8,30 +8,33 @@
     box-sizing: border-box;
 }
 
-/* scroll bar */ 
+/* scroll bar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+    width: 6px;
+    height: 6px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #dfdfdf00;
+    background: #dfdfdf00;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-
-  /* background: #6b5ecc34;  */
-  background: #f6f6f6;
-  border-radius: 10px;
+    /* background: #6b5ecc34;  */
+    background: #f6f6f6;
+    border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #f6f6f6;
-}     
+    background: #f6f6f6;
+}
 
-.ant-form-item{
+.ant-form-item {
     margin-bottom: 15px !important;
+}
+
+:where(.css-dev-only-do-not-override-yuk7u9).ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select{
+  width: 100% !important;
 }

@@ -1,8 +1,6 @@
-import { Button, ConfigProvider, Form, Input, InputNumber, Modal, Select, Upload } from "antd";
-import { useEffect } from "react";
-import { Option } from "antd/es/mentions";
-
-
+import { Button, ConfigProvider, Form, Input, InputNumber, Modal, Select, Upload } from 'antd';
+import { useEffect } from 'react';
+import { Option } from 'antd/es/mentions';
 
 type ClassData = {
     id: string;
@@ -17,7 +15,7 @@ const ProductItemModal = ({
     isOpen,
     setIsOpen,
     editData,
-    setEditData
+    setEditData,
 }: {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
@@ -26,8 +24,7 @@ const ProductItemModal = ({
 }) => {
     const [form] = Form.useForm();
 
-
-    const normFile = (e:any) => {
+    const normFile = (e: any) => {
         if (Array.isArray(e)) {
             return e;
         }
@@ -35,7 +32,7 @@ const ProductItemModal = ({
     };
 
     const onFinish = (values: any) => {
-        console.log("Form Values:", {
+        console.log('Form Values:', {
             ...values,
         });
         setIsOpen(false);
@@ -51,7 +48,7 @@ const ProductItemModal = ({
 
     return (
         <Modal
-            title={<p className="text-xl text-primary font-semibold">{editData?.id ? "Edit Class" : "Create Class"}</p>}
+            title={<p className="text-xl text-primary font-semibold">{editData?.id ? 'Edit Class' : 'Create Class'}</p>}
             open={isOpen}
             onCancel={() => {
                 setIsOpen(false);
@@ -69,16 +66,9 @@ const ProductItemModal = ({
                     },
                 }}
             >
-
-                <Form
-                    form={form}
-                    name="product_form"
-                    onFinish={onFinish}
-                    layout="vertical" 
-                    className="w-full" 
-                >
-                    <div className=" flex items-center gap-3 w-full">
-                        <div>
+                <Form form={form} name="product_form" onFinish={onFinish} layout="vertical" className="w-full">
+                    <div className=" grid grid-cols-2 items-center gap-3 w-full">
+                        <div className="w-full">
                             <Form.Item label="Product Name" name="productName" rules={[{ required: true }]}>
                                 <Input style={{ height: 42, borderRadius: 50 }} placeholder="Enter product name" />
                             </Form.Item>
@@ -92,60 +82,78 @@ const ProductItemModal = ({
                             </Form.Item>
 
                             <Form.Item label="Stock" name="stock" rules={[{ required: true }]}>
-                                <Input style={{ height: 42, borderRadius: 50, width: "100%" }} suffix={<p className="text-green-500"> Active </p>} />
+                                <Input
+                                    style={{ height: 42, borderRadius: 50, width: '100%' }}
+                                    suffix={<p className="text-green-500"> Active </p>}
+                                />
                             </Form.Item>
 
                             <div className="flex items-center gap-2 w-full">
                                 <Form.Item label="Brand" name="brand" className="w-full" rules={[{ required: true }]}>
-                                    <Select placeholder="Select brand" style={{ height: 42, width: "100%" }}>
+                                    <Select placeholder="Select brand" style={{ height: 42, width: '100%' }}>
                                         <Option value="brand1">Brand1</Option>
                                         <Option value="brand2">Brand2</Option>
                                         <Option value="brand3">Brand3</Option>
                                     </Select>
                                 </Form.Item>
 
-                                <Form.Item label="Color" name="color" rules={[{ required: true }]}>
-                                    <Select placeholder="Select Color" style={{ height: 42, width: "100%" }}>
+                                <Form.Item label="Color" name="color" className="w-full" rules={[{ required: true }]}>
+                                    <Select placeholder="Select Color" style={{ height: 42, width: '100%' }}>
                                         <Option value="black">Black</Option>
                                         <Option value="white">White</Option>
                                         <Option value="blue">Blue</Option>
                                     </Select>
                                 </Form.Item>
                             </div>
+                            <div className="flex items-center gap-2 w-full">
+                                <Form.Item label="Regular Price" name="regularPrice" rules={[{ required: true }]}>
+                                    <InputNumber min={0} addonAfter="$" />
+                                </Form.Item>
 
-                            <Form.Item label="Regular Price" name="regularPrice" rules={[{ required: true }]}>
-                                <InputNumber min={0} addonAfter="$" />
-                            </Form.Item>
-
-                            <Form.Item label="Offer Price" name="offerPrice" rules={[{ required: true }]}>
-                                <InputNumber min={0} addonAfter="$" />
-                            </Form.Item>
+                                <Form.Item label="Offer Price" name="offerPrice" rules={[{ required: true }]}>
+                                    <InputNumber min={0} addonAfter="$" />
+                                </Form.Item>
+                            </div>
                         </div>
 
-                        <div>
-                            <Form.Item label="Description" name="description">
-                                <Input.TextArea />
-                            </Form.Item>
-
-                            <Form.Item label="Product Images" name="images" valuePropName="fileList" getValueFromEvent={normFile}>
-                                <Upload listType="picture-card" beforeUpload={() => false}>
-                                    <div>
+                        <div className="!w-full">
+                            <Form.Item
+                                className="!w-full"
+                                label="Product Images"
+                                name="images"
+                                valuePropName="fileList"
+                                getValueFromEvent={normFile}
+                            >
+                                <Upload listType="picture-card" beforeUpload={() => false} className="!w-full">
+                                    <div className="!w-full h-full flex flex-col items-center justify-center">
                                         <p>Drop files to upload or</p>
                                         <Button>Browse</Button>
                                     </div>
                                 </Upload>
                             </Form.Item>
-
                         </div>
+
+                        <Form.Item label="Description" name="description" className="col-span-2">
+                            <Input.TextArea className="!h-40 rounded-3xl" />
+                        </Form.Item>
                     </div>
 
-
-
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button type="primary" htmlType="submit" style={{ backgroundColor: '#722ed1', borderColor: '#722ed1' }}>
-                            Save & Upload
-                        </Button>
-                    </Form.Item>
+                    <div className="flex justify-center items-center">
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                block
+                                className="!w-[360px] !h-[48px]"
+                                style={{
+                                    backgroundColor: '#722ed1',
+                                    borderColor: '#722ed1',
+                                }}
+                            >
+                                Save & Upload
+                            </Button>
+                        </Form.Item>
+                    </div>
                 </Form>
             </ConfigProvider>
         </Modal>
