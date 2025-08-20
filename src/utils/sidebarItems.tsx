@@ -1,10 +1,16 @@
-
 import { TSidebarItem } from './generateSidebarItems';
-import {  AiOutlineDollar, AiOutlineDollarCircle, AiOutlineFileSearch, AiOutlineProduct, AiOutlineQuestionCircle, AiOutlineStar } from 'react-icons/ai';
-import { IoBarChartOutline } from 'react-icons/io5';
+import {
+    AiOutlineDollar,
+    AiOutlineFileDone,
+    AiOutlineFileSearch,
+    AiOutlineProduct,
+    AiOutlineQuestionCircle,
+} from 'react-icons/ai';
+import { IoBarChartOutline, IoImagesOutline } from 'react-icons/io5';
 import { TbLogout, TbMessage2Check } from 'react-icons/tb';
-import { PiBuildingOffice } from 'react-icons/pi';
-import { BsExclamationOctagon } from 'react-icons/bs';
+import { IoIosInformationCircleOutline } from 'react-icons/io';
+import { RiAlarmWarningLine } from 'react-icons/ri';
+import { BsExclamationOctagon, BsPersonGear } from 'react-icons/bs';
 
 const sidebarItems: TSidebarItem[] = [
     {
@@ -32,53 +38,65 @@ const sidebarItems: TSidebarItem[] = [
         icon: <AiOutlineProduct size={24} />,
     },
     {
-        key: 'booking-history',
-        label: 'Booking History',
-        path: 'booking-history',
+        key: 'users',
+        label: 'App Users',
+        path: 'users',
         icon: <TbMessage2Check size={24} />,
     },
     {
-        key: 'reviews',
-        label: 'Reviews',
-        path: 'reviews',
-        icon: <AiOutlineStar size={24} />,
+        key: 'add-admin',
+        label: 'Admin Panel',
+        path: 'make-admin',
+        icon: <BsPersonGear size={24} />,
     },
     {
-        key: 'companies',
-        label: 'Companies',
-        path: 'companies',
-        icon: <PiBuildingOffice size={24} />,
+        key: 'app-slider',
+        label: 'App Slider',
+        path: 'app-slider',
+        icon: <IoImagesOutline size={24} />,
+    },
+    // {
+    //     key: 'reviews',
+    //     label: 'Reviews',
+    //     path: 'reviews',
+    //     icon: <AiOutlineStar size={24} />,
+    // },
+    // {
+    //     key: 'companies',
+    //     label: 'Companies',
+    //     path: 'companies',
+    //     icon: <PiBuildingOffice size={24} />,
+    // },
+    // {
+    //     key: 'why-choose',
+    //     label: 'Why Choose',
+    //     path: 'why-choose',
+    //     icon: <BsExclamationOctagon size={24} />,
+    // },
+    // {
+    //     key: 'transactions',
+    //     label: 'Transactions',
+    //     path: 'transactions',
+    //     icon: <AiOutlineDollarCircle size={24} />,
+    // },
+    {
+        key: 'about',
+        label: 'About Us',
+        path: 'about',
+        icon: <IoIosInformationCircleOutline size={24} />,
     },
     {
-        key: 'why-choose',
-        label: 'Why Choose',
-        path: 'why-choose',
-        icon: <BsExclamationOctagon size={24} />,
+        key: 'terms',
+        label: 'Terms & Conditions',
+        path: 'terms',
+        icon: <AiOutlineFileDone size={24} />,
     },
     {
-        key: 'transactions',
-        label: 'Transactions',
-        path: 'transactions',
-        icon: <AiOutlineDollarCircle size={24} />,
+        key: 'privacy',
+        label: 'privacy policy',
+        path: 'privacy',
+        icon: <RiAlarmWarningLine size={24} />,
     },
-    // {
-    //     key: 'add-admin',
-    //     label: 'Add Admin',
-    //     path: 'make-admin',
-    //     icon: <BsPersonGear size={24} />,
-    // },
-    // {
-    //     key: 'terms',
-    //     label: 'Terms & Conditions',
-    //     path: 'terms',
-    //     icon: <AiOutlineFileText size={24} />,
-    // },
-    // {
-    //     key: 'privacy',
-    //     label: 'privacy policy',
-    //     path: 'privacy',
-    //     icon: <AiOutlineFileText size={24} />,
-    // },
     {
         key: 'faqs',
         label: 'FAQs',

@@ -1,27 +1,35 @@
 import { Button, ConfigProvider, Form, Input, InputNumber, Modal, Select, Upload } from 'antd';
 import { useEffect } from 'react';
 import { Option } from 'antd/es/mentions';
+import { Product } from '../../pages/dashboard/ProductDetails';
 
-type ClassData = {
-    id: string;
-    className: string;
-    classImage: string;
-    description: string;
-    features: string[];
-    price: number;
-};
+// Define the Product type if not already imported
+// type Product = {
+//   id?: string | number;
+//   productName?: string;
+//   categories?: string[];
+//   stock?: string | number;
+//   brand?: string;
+//   color?: string;
+//   regularPrice?: number;
+//   offerPrice?: number;
+//   images?: any[];
+//   description?: string;
+// };
+
+interface ProductItemModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  editData: Product | null;
+  setEditData: (data: Product | null) => void; 
+}
 
 const ProductItemModal = ({
     isOpen,
     setIsOpen,
     editData,
     setEditData,
-}: {
-    isOpen: boolean;
-    setIsOpen: (isOpen: boolean) => void;
-    editData: ClassData | null;
-    setEditData: (data: ClassData | null) => void;
-}) => {
+}: ProductItemModalProps) => {
     const [form] = Form.useForm();
 
     const normFile = (e: any) => {
@@ -67,7 +75,7 @@ const ProductItemModal = ({
                 }}
             >
                 <Form form={form} name="product_form" onFinish={onFinish} layout="vertical" className="w-full">
-                    <div className=" grid grid-cols-2 items-center gap-3 w-full">
+                    <div className=" grid grid-cols-2 gap-3 w-full">
                         <div className="w-full">
                             <Form.Item label="Product Name" name="productName" rules={[{ required: true }]}>
                                 <Input style={{ height: 42, borderRadius: 50 }} placeholder="Enter product name" />

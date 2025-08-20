@@ -1,21 +1,25 @@
 import { Button, Checkbox, ConfigProvider, Input, Select, Table } from 'antd';
 import { useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
-import { AiOutlineEdit } from 'react-icons/ai';
 import { FiSearch } from 'react-icons/fi';
 import ProductItemModal from '../../components/modals/ProductItemModal';
+import { BiEdit } from 'react-icons/bi';
+import type { ColumnsType } from 'antd/es/table';
 
-type ClassData = {
-    id: string;
-    className: string;
-    classImage: string;
-    description: string;
-    features: string[];
-    price: number;
-};
+export interface Product {
+    id: number;
+    productName: string;
+    category: string;
+    brand: string;
+    regularPrice: number;
+    offerPrice: number;
+    stock: number;
+    status: string;
+}
+
 const ProductDetails = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [editData, setEditData] = useState<ClassData | null>(null);
+    const [editData, setEditData] = useState<Product | null>(null);
     const [activeTab, setActiveTab] = useState('Products');
 
     const brandOptions = [
@@ -38,108 +42,208 @@ const ProductDetails = () => {
 
     const productsData = [
         {
-            id: '001',
-            productName: 'Luggage',
-            category: 'Trikli Products',
-            brand: 'Trikli',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '50',
-            status: 'Active',
+            id: 1,
+            productName: 'Wireless Mouse',
+            category: 'Electronics',
+            brand: 'Logitech',
+            regularPrice: 25,
+            offerPrice: 20,
+            stock: 15,
+            status: 'active',
         },
         {
-            id: '002',
-            productName: 'Luggage',
-            category: 'Luggage',
-            brand: 'Gucci',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '00',
-            status: 'Unavailable',
+            id: 2,
+            productName: 'Gaming Keyboard',
+            category: 'Electronics',
+            brand: 'Razer',
+            regularPrice: 120,
+            offerPrice: 100,
+            stock: 8,
+            status: 'active',
         },
         {
-            id: '003',
-            productName: 'Luggage',
-            category: 'Bags',
-            brand: 'Hermes',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '50',
-            status: 'Active',
+            id: 3,
+            productName: 'Bluetooth Speaker',
+            category: 'Electronics',
+            brand: 'JBL',
+            regularPrice: 60,
+            offerPrice: 50,
+            stock: 0,
+            status: 'inactive',
         },
         {
-            id: '004',
-            productName: 'Luggage',
-            category: 'Tags',
-            brand: 'YSL',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '50',
-            status: 'Active',
+            id: 4,
+            productName: 'Running Shoes',
+            category: 'Footwear',
+            brand: 'Nike',
+            regularPrice: 80,
+            offerPrice: 70,
+            stock: 25,
+            status: 'active',
         },
         {
-            id: '005',
-            productName: 'Luggage',
-            category: 'Briefcase',
-            brand: 'Chanel',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '00',
-            status: 'Unavailable',
+            id: 5,
+            productName: 'Leather Wallet',
+            category: 'Accessories',
+            brand: 'Fossil',
+            regularPrice: 45,
+            offerPrice: 35,
+            stock: 5,
+            status: 'active',
         },
         {
-            id: '006',
-            productName: 'Luggage',
-            category: 'Baby',
-            brand: 'Trikli',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '50',
-            status: 'Active',
+            id: 6,
+            productName: 'Smart Watch',
+            category: 'Electronics',
+            brand: 'Apple',
+            regularPrice: 300,
+            offerPrice: 280,
+            stock: 12,
+            status: 'active',
         },
         {
-            id: '007',
-            productName: 'Luggage',
-            category: 'Luggage',
-            brand: 'Dior',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '07',
-            status: 'Short Stock',
+            id: 7,
+            productName: 'Sunglasses',
+            category: 'Accessories',
+            brand: 'Ray-Ban',
+            regularPrice: 150,
+            offerPrice: 130,
+            stock: 2,
+            status: 'active',
         },
         {
-            id: '008',
-            productName: 'Luggage',
-            category: 'Baby',
-            brand: 'Prada',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '50',
-            status: 'Active',
+            id: 8,
+            productName: 'Denim Jacket',
+            category: 'Clothing',
+            brand: "Levi's",
+            regularPrice: 90,
+            offerPrice: 75,
+            stock: 20,
+            status: 'active',
         },
         {
-            id: '009',
-            productName: 'Luggage',
-            category: 'Baby',
-            brand: 'Trikli',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '50',
-            status: 'Active',
+            id: 9,
+            productName: 'Laptop Backpack',
+            category: 'Accessories',
+            brand: 'HP',
+            regularPrice: 50,
+            offerPrice: 40,
+            stock: 0,
+            status: 'inactive',
         },
         {
-            id: '010',
-            productName: 'Luggage',
-            category: 'Luggage',
-            brand: 'Trikli',
-            regularPrice: '$20.30',
-            offerPrice: '$16.30',
-            stock: '00',
-            status: 'Unavailable',
+            id: 10,
+            productName: 'Action Camera',
+            category: 'Electronics',
+            brand: 'GoPro',
+            regularPrice: 250,
+            offerPrice: 220,
+            stock: 7,
+            status: 'active',
+        },
+        {
+            id: 11,
+            productName: 'Office Chair',
+            category: 'Furniture',
+            brand: 'Ikea',
+            regularPrice: 200,
+            offerPrice: 180,
+            stock: 10,
+            status: 'active',
+        },
+        {
+            id: 12,
+            productName: 'Electric Kettle',
+            category: 'Home Appliances',
+            brand: 'Philips',
+            regularPrice: 40,
+            offerPrice: 35,
+            stock: 18,
+            status: 'active',
+        },
+        {
+            id: 13,
+            productName: 'Yoga Mat',
+            category: 'Fitness',
+            brand: 'Reebok',
+            regularPrice: 25,
+            offerPrice: 20,
+            stock: 0,
+            status: 'inactive',
+        },
+        {
+            id: 14,
+            productName: 'Coffee Maker',
+            category: 'Home Appliances',
+            brand: 'Breville',
+            regularPrice: 120,
+            offerPrice: 100,
+            stock: 3,
+            status: 'active',
+        },
+        {
+            id: 15,
+            productName: 'Tablet',
+            category: 'Electronics',
+            brand: 'Samsung',
+            regularPrice: 220,
+            offerPrice: 200,
+            stock: 14,
+            status: 'active',
+        },
+        {
+            id: 16,
+            productName: 'Fitness Tracker',
+            category: 'Electronics',
+            brand: 'Fitbit',
+            regularPrice: 100,
+            offerPrice: 85,
+            stock: 6,
+            status: 'active',
+        },
+        {
+            id: 17,
+            productName: 'Gaming Chair',
+            category: 'Furniture',
+            brand: 'DXRacer',
+            regularPrice: 350,
+            offerPrice: 300,
+            stock: 0,
+            status: 'inactive',
+        },
+        {
+            id: 18,
+            productName: 'Winter Coat',
+            category: 'Clothing',
+            brand: 'North Face',
+            regularPrice: 180,
+            offerPrice: 150,
+            stock: 22,
+            status: 'active',
+        },
+        {
+            id: 19,
+            productName: 'Wireless Earbuds',
+            category: 'Electronics',
+            brand: 'Sony',
+            regularPrice: 120,
+            offerPrice: 100,
+            stock: 9,
+            status: 'active',
+        },
+        {
+            id: 20,
+            productName: 'Desk Lamp',
+            category: 'Home Appliances',
+            brand: 'Philips',
+            regularPrice: 30,
+            offerPrice: 25,
+            stock: 11,
+            status: 'active',
         },
     ];
 
-    const columns = [
+    const columns: ColumnsType<Product> = [
         {
             title: <Checkbox />,
             dataIndex: 'checkbox',
@@ -186,20 +290,27 @@ const ProductDetails = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string) => {
-                let color = '';
-                switch (status) {
-                    case 'Active':
-                        color = 'green';
-                        break;
-                    case 'Unavailable':
-                        color = 'red';
-                        break;
-                    case 'Short Stock':
-                        color = 'orange';
-                        break;
+            align: 'center',
+            render: (_: String, record: Record<string, any>) => {
+                let status = '';
+                let statusClass = '';
+
+                if (record.stock === 0) {
+                    status = 'Stock Out';
+                    statusClass = 'bg-[#FC605726] text-[#FC6057]';
+                } else if (record.stock < 10) {
+                    status = 'Short Stock';
+                    statusClass = 'bg-[#FBC02D33] text-[#FBC02D]';
+                } else {
+                    status = 'In Stock';
+                    statusClass = 'bg-[#00800033] text-[#2E7D32]';
                 }
-                return <span style={{ color }}>{status}</span>;
+
+                return (
+                    <div className="pr-4 flex justify-center">
+                        <p className={`w-32 rounded-md text-base py-[2px] capitalize ${statusClass}`}>{status}</p>
+                    </div>
+                );
             },
         },
         {
@@ -214,15 +325,16 @@ const ProductDetails = () => {
                             setEditData(record);
                         }}
                     >
-                        <AiOutlineEdit className="text-xl text-primary" />
+                        <BiEdit className="text-2xl text-primary" />
                     </button>
                     <button>
-                        <IoTrashOutline className="text-xl text-red-500" />
+                        <IoTrashOutline className="text-2xl text-red-500" />
                     </button>
                 </div>
             ),
         },
     ];
+
     return (
         <div>
             <div className="flex justify-between items-center mb-5">

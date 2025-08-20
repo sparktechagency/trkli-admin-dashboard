@@ -10,12 +10,12 @@ const Privacy = () => {
         readonly: false,
         placeholder: 'Start typings...',
         style: {
-            height: 400,
+            height: 500,
             background: 'white',
         },
     };
     return (
-        <div className=" bg-white px-4 py-2 rounded-lg pb-10 ">
+        <div className=" bg-white px-4 py-2 rounded-lg pb-10">
             <div
                 style={{
                     display: 'flex',
@@ -25,7 +25,7 @@ const Privacy = () => {
                 }}
             >
                 <div>
-                    <h3 className="text-3xl text-primary font-semibold">Privacy Policy</h3>
+                    <h3 className="text-2xl text-primary font-semibold">Privacy Policy</h3>
                 </div>
             </div>
             <div>

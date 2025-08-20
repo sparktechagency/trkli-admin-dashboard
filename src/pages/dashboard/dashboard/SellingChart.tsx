@@ -1,6 +1,6 @@
-import { Select } from 'antd';
+import { ConfigProvider, DatePicker } from 'antd';
+import { FaChevronDown } from 'react-icons/fa';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-const { Option } = Select;
 const data = [
     { name: 'Jan', device: 5000, product: 3000},
     { name: 'Feb', products: 12000, device: 13000  },
@@ -27,15 +27,22 @@ const SellingChart = () => {
         >
             <div className="px-2 flex items-center justify-between">
                 <h1 className="text-lg font-medium">Selling Statistics</h1>
-                <Select defaultValue="2024" className="w-32 h-[35px]">
-                    <Option value="2024">2024</Option>
-                    <Option value="2025">2025</Option>
-                    <Option value="2026">2026</Option>
-                    <Option value="2027">2027</Option>
-                    <Option value="2028">2028</Option>
-                    <Option value="2029">2029</Option>
-                    <Option value="2030">2030</Option>
-                </Select>
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorPrimary: '#8F00FF',
+                        },
+                    }}
+                >
+                    <DatePicker
+                        className="!cursor-pointer"
+                        picker="year"
+                        suffixIcon={<FaChevronDown className="text-gray-500 text-sm" />}
+                        // onChange={(_, dateString) => {
+                        //     setStudentYear(dateString);
+                        // }}
+                    />
+                </ConfigProvider>
             </div>
             <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>

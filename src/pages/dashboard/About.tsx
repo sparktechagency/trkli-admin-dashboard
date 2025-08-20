@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import JoditEditor from 'jodit-react';
 import { Button } from 'antd';
 
-const TermsCondition = () => {
+const About = () => {
     const editor = useRef(null);
     const [content, setContent] = useState('');
 
@@ -25,7 +25,7 @@ const TermsCondition = () => {
                 }}
             >
                 <div>
-                    <h3 className="text-2xl text-primary font-semibold">Terms and Conditions</h3>
+                    <h3 className="text-2xl text-primary font-semibold">About Us</h3>
                 </div>
             </div>
             <div>
@@ -59,4 +59,4 @@ const TermsCondition = () => {
     );
 };
 
-export default TermsCondition;
+export default About;

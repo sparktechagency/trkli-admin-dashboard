@@ -4,7 +4,7 @@ export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://10.10.7.6:5000/api/v1",
-    prepareHeaders: (headers) => {
+    prepareHeaders: (headers: Headers) => {
       const token = localStorage.getItem("token");
       if (token && token !== "undefined") {
         headers.set("Authorization", `Bearer ${JSON.parse(token)}`)

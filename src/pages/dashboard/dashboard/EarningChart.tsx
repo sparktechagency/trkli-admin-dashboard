@@ -1,6 +1,6 @@
-import { Select } from 'antd';
+import { ConfigProvider, DatePicker } from 'antd';
+import { FaChevronDown } from 'react-icons/fa';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Legend, Bar } from 'recharts';
-const { Option } = Select;
 const EarningChart = () => {
     interface UserData {
         month: string;
@@ -31,26 +31,33 @@ const EarningChart = () => {
             }}
         >
             <div className="px-2 flex items-center justify-between">
-                <h1 className="text-lg font-medium">Earning  Statistics</h1>
-                <Select defaultValue="2024" className="w-32 h-[35px]">
-                    <Option value="2024">2024</Option>
-                    <Option value="2025">2025</Option>
-                    <Option value="2026">2026</Option>
-                    <Option value="2027">2027</Option>
-                    <Option value="2028">2028</Option>
-                    <Option value="2029">2029</Option>
-                    <Option value="2030">2030</Option>
-                </Select>
+                <h1 className="text-lg font-medium">Earning Statistics</h1>
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorPrimary: '#8F00FF',
+                        },
+                    }}
+                >
+                    <DatePicker
+                        className="!cursor-pointer"
+                        picker="year"
+                        suffixIcon={<FaChevronDown className="text-gray-500 text-sm" />}
+                        // onChange={(_, dateString) => {
+                        //     setStudentYear(dateString);
+                        // }}
+                    />
+                </ConfigProvider>
             </div>
             <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={data}>
+                <BarChart data={data} barSize={10}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="income" fill="#CB8AFF" />
-                    <Bar dataKey="profit" fill="#8F00FF" />
+                    <Bar dataKey="income" fill="#CB8AFF" radius={[10, 10, 0, 0]} />
+                    <Bar dataKey="profit" fill="#8F00FF" radius={[10, 10, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>
         </div>
