@@ -17,7 +17,7 @@ const DeleteModal = ({ showDelete, setShowDelete, handleDelete, deleteId }: Dele
         <p className="pt-4 pb-12 text-center">Do you want to delete this product?</p>
         <button
           onClick={() => handleDelete(deleteId)}
-          className="bg-[#2E7A8A] py-2 px-5 text-white rounded-md"
+          className="bg-[#8F00FF] py-2 px-5 text-white rounded-full"
         >
           Confirm
         </button>

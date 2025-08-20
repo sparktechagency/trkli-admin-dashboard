@@ -3,27 +3,39 @@ import { AiOutlineEdit } from 'react-icons/ai';
 
 const { TextArea } = Input;
 
-const EditFaqForm = ({ onFinish }: { onFinish: (values: any) => void }) => {
+const EditFaqForm = ({ onFinish, editData }: { onFinish: (values: any) => void; editData: any }) => {
     const [form] = Form.useForm();
 
+    const handleSubmit = (values: any) => {
+        const faqObject = {
+            id: editData?._id,
+            question: values.productName,
+            answer: values.answer,
+        };
+        onFinish(faqObject);
+    };
+
     return (
-        <Form form={form} layout="vertical" onFinish={onFinish}>
-            {/* Product Name */}
+        <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleSubmit}
+            initialValues={{
+                productName: editData?.question,
+                answer: editData?.answer,
+            }}
+        >
+            {/* Question */}
             <Form.Item
                 label="Question"
                 name="productName"
                 rules={[{ required: true, message: 'Please enter a question' }]}
             >
-                <Input
-                    style={{
-                        height: 42,
-                    }}
-                    placeholder="Your faq question"
-                />
+                <Input style={{ height: 42 }} placeholder="Your faq question" />
             </Form.Item>
 
-            {/* Description */}
-            <Form.Item label="Answer" name="answer" rules={[{ required: true, message: 'Please enter a answer' }]}>
+            {/* Answer */}
+            <Form.Item label="Answer" name="answer" rules={[{ required: true, message: 'Please enter an answer' }]}>
                 <TextArea
                     style={{
                         width: '100%',
@@ -36,16 +48,9 @@ const EditFaqForm = ({ onFinish }: { onFinish: (values: any) => void }) => {
                 />
             </Form.Item>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <Form.Item>
-                <Button
-                    icon={<AiOutlineEdit />}
-                    htmlType="submit"
-                    style={{
-                        height: 40,
-                    }}
-                    type="primary"
-                >
+                <Button icon={<AiOutlineEdit />} htmlType="submit" style={{ height: 40 }} type="primary">
                     Edit FAQ
                 </Button>
             </Form.Item>

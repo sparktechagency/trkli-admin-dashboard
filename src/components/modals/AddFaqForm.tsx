@@ -3,8 +3,8 @@ import { AiOutlinePlus } from 'react-icons/ai';
 
 const { TextArea } = Input;
 
-const AddFaqForm = ({ onFinish }: { onFinish: (values: any) => void }) => {
-    const [form] = Form.useForm();
+const AddFaqForm = ({ onFinish, form }: { onFinish: (values: any) => void, form: any }) => {
+
 
     return (
         <Form form={form} layout="vertical" onFinish={onFinish}>

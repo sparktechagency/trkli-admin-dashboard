@@ -1,4 +1,4 @@
-import { Button, Flex } from 'antd';
+import { Button, Flex, Form } from 'antd';
 import { useState } from 'react';
 import CustomModal from '../../components/shared/CustomModal';
 import AddFaqForm from '../../components/modals/AddFaqForm';
@@ -8,43 +8,86 @@ import { GoQuestion } from 'react-icons/go';
 import { CiEdit } from 'react-icons/ci';
 import { RxCross2 } from 'react-icons/rx';
 import { AiOutlinePlus } from 'react-icons/ai';
-
-const faqData = [
-    {
-        question: 'What is the recommended age for using your baby products?',
-        answer: 'Our baby products are designed for newborns up to 3 years old. However, each product comes with specific guidelines for the recommended age range.',
-    },
-    {
-        question: 'Are your products safe for sensitive skin?',
-        answer: 'Yes, our products are dermatologically tested and safe for babies with sensitive skin. We use hypoallergenic and non-toxic ingredients.',
-    },
-    {
-        question: 'How can I track my order?',
-        answer: 'Once your order is shipped, we will send you a tracking number via email. You can use this number to track your package on our website or through the carrier’s site.',
-    },
-    {
-        question: 'What is your return policy?',
-        answer: 'We offer a 30-day return policy on all products. Items must be unused and in their original packaging. Please contact our support team to initiate a return.',
-    },
-]; 
+import {
+    useCreateFAQMutation,
+    useDeleteFAQMutation,
+    useGetFAQQuery,
+    useUpdateFAQMutation,
+} from '../../redux/features/faqApi';
+import toast from 'react-hot-toast';
+import DeleteModal from '../../components/modals/DeleteModal';
 
 const FAQs = () => {
+    const [form] = Form.useForm();
+    const { data, refetch } = useGetFAQQuery({});
+    const faqData = data?.data || [];
+    const [createFAQ] = useCreateFAQMutation();
+    const [updateFAQ] = useUpdateFAQMutation();
+    const [deleteFAQ] = useDeleteFAQMutation();
+
     const [openModal, setOpenModal] = useState(false);
     const [openEditModal, setEditModal] = useState(false);
+    const [editData, setEditData] = useState<any>(null);
+    const [showDelete, setShowDelete] = useState(false);
+    const [deleteId, setDeleteId] = useState('');
 
-    const handleAddFaq = (values: any) => {
-        console.log('Form Submitted', values);
-        setOpenModal(false);
+    const handleAddFaq = async (values: any) => {
+        const payload = {
+            question: values.productName,
+            answer: values.answer,
+        };
+
+        try {
+            const res = await createFAQ(payload).unwrap();
+            if (res?.success) {
+                toast.success(res?.message || 'FAQ created successfully');
+                refetch();
+                form.resetFields();
+                setOpenModal(false);
+            }
+        } catch (error: any) {
+            console.log('Error Creating FAQ:', error);
+            toast.error(error?.data?.message || 'Failed to create FAQ');
+        }
     };
 
-    const handleEdit = (index: number) => {
-        // Logic for editing the FAQ
-        console.log(`Edit FAQ at index: ${index}`);
+    const handleEdit = async (faqObject: { id: string; question: string; answer: string }) => {
+        const id = faqObject?.id;
+        const payload = {
+            question: faqObject?.question,
+            answer: faqObject?.answer,
+        };
+        
+        try {
+            const res = await updateFAQ({ id, payload }).unwrap();
+            if (res?.success) {
+                toast.success(res?.message || 'FAQ updated successfully');
+                refetch();
+                setEditModal(false);
+            }
+        } catch (error: any) {
+            console.log('Error updating FAQ:', error);
+            toast.error(error?.data?.message || 'Failed to update FAQ');
+        }
     };
 
+    const handleDelete = async (id: string) => {
+        console.log(`Delete FAQ with ID: ${id}`);
+        try {
+            const res = await deleteFAQ(id).unwrap();
+            if (res?.success) {
+                toast.success(res?.message || 'FAQ deleted successfully');
+                refetch();
+                setShowDelete(false);
+            }
+        } catch (error: any) {
+            console.error('Error deleting FAQ:', error);
+            toast.error(error?.data?.message || 'Failed to delete FAQ');
+        }
+    };
 
     return (
-        <div className=' pt-5 px-3'>
+        <div className=" pt-5 px-3 h-full">
             <Flex vertical={false} gap={10} align="center" justify="space-between">
                 <div>
                     <h1 className="text-2xl text-primary font-semibold">FAQs</h1>
@@ -61,6 +104,7 @@ const FAQs = () => {
                         htmlType="submit"
                         style={{
                             height: 40,
+                            borderRadius: 50,
                         }}
                         type="primary"
                     >
@@ -69,10 +113,10 @@ const FAQs = () => {
                 </div>
             </Flex>
 
-            <div className="space-y-6 my-5">
-                <div className="bg-white py-6 px-4 rounded-md">
-                    {faqData.map((item, index) => (
-                        <div key={index} className="flex justify-between items-start gap-4 ">
+            <div className="space-y-6 my-5 h-full">
+                <div className="bg-white py-6 px-4 rounded-md h-full">
+                    {faqData.map((item: { _id: string; question: string; answer: string }, index: number) => (
+                        <div key={index} className="flex justify-between items-start gap-4">
                             <div className="mt-3">
                                 <GoQuestion color="#8F00FF" size={25} />
                             </div>
@@ -89,12 +133,16 @@ const FAQs = () => {
                                     size={24}
                                     onClick={() => {
                                         setEditModal(true);
+                                        setEditData(item);
                                     }}
                                     className="text-2xl cursor-pointer text-[#8F00FF]"
                                 />
                                 <RxCross2
                                     size={24}
-                                    onClick={() => { }}
+                                    onClick={() => {
+                                        setDeleteId(item?._id);
+                                        setShowDelete(true);
+                                    }}
                                     className="text-2xl cursor-pointer text-red-600"
                                 />
                             </div>
@@ -106,16 +154,23 @@ const FAQs = () => {
             <CustomModal
                 open={openModal}
                 setOpen={setOpenModal}
-                title={<p className='font-semibold text-xl  text-primary'>Add FAQ </p>}
+                title={<p className="font-semibold text-xl  text-primary">Add FAQ </p>}
                 width={500}
-                body={<AddFaqForm onFinish={handleAddFaq} />}
+                body={<AddFaqForm onFinish={handleAddFaq} form={form} />}
             />
             <CustomModal
                 open={openEditModal}
                 setOpen={setEditModal}
-                title={<p className='font-semibold text-xl  text-primary'>Edit FAQ </p>}
+                title={<p className="font-semibold text-xl  text-primary">Edit FAQ </p>}
                 width={500}
-                body={<EditFaqForm onFinish={handleEdit} />}
+                body={<EditFaqForm onFinish={handleEdit} editData={editData} />}
+            />
+
+            <DeleteModal
+                showDelete={showDelete}
+                setShowDelete={setShowDelete}
+                deleteId={deleteId}
+                handleDelete={handleDelete}
             />
         </div>
     );
