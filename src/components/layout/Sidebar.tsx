@@ -1,16 +1,22 @@
 import { ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import { TSidebarItem } from '../../utils/generateSidebarItems';
 import sidebarItems from '../../utils/sidebarItems';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 const { Sider } = Layout;
 
 const Sidebar = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const [openKeys, setOpenKeys] = useState<string[]>([]);
 
     const handleOpenChange = (keys: string[]) => {
         setOpenKeys(keys);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
     };
 
     const sidebarItemsGenerator = (items: TSidebarItem[]): MenuProps['items'] => {
@@ -28,11 +34,19 @@ const Sidebar = () => {
                 };
             }
 
-            return {
-                key: `/${item.path}`,
-                icon: item.icon,
-                label: <Link to={`/${item.path}`}>{item.label}</Link>,
-            };
+            if (item.key !== 'logout') {
+                return {
+                    key: `/${item.path}`,
+                    icon: item.icon,
+                    label: <Link to={`/${item.path}`}>{item.label}</Link>,
+                };
+            } else {
+                return {
+                    key: item.key,
+                    icon: item.icon,
+                    label: <span onClick={handleLogout}>{item.label}</span>,
+                };
+            }
         });
     };
 
@@ -71,10 +85,10 @@ const Sidebar = () => {
                             margin: '0 20px',
                             padding: '20px 0',
                         }}
-                        className=' flex items-center justify-start gap-1'
+                        className=" flex items-center justify-start gap-1"
                     >
-                        <img src="/logo.png" alt="" className=' w-8 h-8 ' />
-                        <p className=' text-[#050505] text-3xl font-bold  '> trkli</p>
+                        <img src="/logo.png" alt="" className=" w-8 h-8 " />
+                        <p className=" text-[#050505] text-3xl font-bold  "> trkli</p>
                     </div>
                 </Link>
 

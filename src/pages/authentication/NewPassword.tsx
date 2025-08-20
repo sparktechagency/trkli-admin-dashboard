@@ -1,12 +1,39 @@
 import { Button, ConfigProvider, Form, FormProps, Input } from 'antd';
-import { FieldNamesType } from 'antd/es/cascader';
 import { useNavigate } from 'react-router';
+import { useResetPasswordMutation } from '../../redux/features/authApi';
+import toast from 'react-hot-toast';
+
+type NewPasswordFormValues = {
+    new_password: string;
+    confirm_password: string;
+};
 
 const NewPassword = () => {
+    const [resetPassword] = useResetPasswordMutation();
     const navigate = useNavigate();
-    const onFinish: FormProps<FieldNamesType>['onFinish'] = (values) => {
-        console.log('Received values of form: ', values);
-        navigate('/');
+    const token = new URLSearchParams(window.location.search).get('token');
+
+    const onFinish: FormProps<NewPasswordFormValues>['onFinish'] = async (values) => {
+        const payload = {
+            newPassword: values.new_password,
+            confirmPassword: values.confirm_password,
+        };
+        try {
+            const res = await resetPassword({
+                payload,
+                token,
+            }).unwrap();
+
+            if (res?.success) {
+                navigate('/login');
+                toast.success(res?.message);
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(
+                (error as { data?: { message?: string } })?.data?.message || 'Reset password failed! Try Again Please.',
+            );
+        }
     };
 
     return (
@@ -29,13 +56,16 @@ const NewPassword = () => {
                 },
             }}
         >
-            <div className="flex items-center justify-center h-screen" style={{
-            backgroundImage: `url('/auth.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'top',
-            backgroundRepeat: 'no-repeat',
-            objectFit: 'cover',
-        }}>
+            <div
+                className="flex items-center justify-center h-screen"
+                style={{
+                    backgroundImage: `url('/auth.png')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'top',
+                    backgroundRepeat: 'no-repeat',
+                    objectFit: 'cover',
+                }}
+            >
                 <div className="bg-white w-[630px] rounded-lg shadow-lg p-10 ">
                     <div className="text-primaryText max-w-md mx-auto space-y-3 text-center">
                         <h1 className="text-3xl  font-medium text-center mt-2">Set a new password</h1>

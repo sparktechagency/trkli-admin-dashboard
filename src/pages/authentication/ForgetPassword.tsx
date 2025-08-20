@@ -1,12 +1,26 @@
 import { Button, ConfigProvider, Form, FormProps, Input } from 'antd';
-import { FieldNamesType } from 'antd/es/cascader';
 import { useNavigate } from 'react-router';
+import { useForgotPasswordMutation } from '../../redux/features/authApi';
+import toast from 'react-hot-toast';
+
+type ForgetPasswordFormValues = {
+    email: string;
+};
 
 const ForgetPassword = () => {
+    const [forgotPassword] = useForgotPasswordMutation();
     const navigate = useNavigate();
-    const onFinish: FormProps<FieldNamesType>['onFinish'] = (values) => {
-        console.log('Received values of form: ', values);
-        navigate('/verify-otp');
+    const onFinish: FormProps<ForgetPasswordFormValues>['onFinish'] = async (values) => {
+        try {
+            const response = await forgotPassword(values).unwrap();
+            if (response?.success) {
+                toast.success('Verification code sent to your email');
+                navigate(`/verify-otp?email=${values?.email}`);
+            }
+        } catch (error) {
+            console.error('Forgot password failed:', error);
+            toast.error((error as { data?: { message?: string } })?.data?.message || 'Forgot password failed! Try Again Please.');
+        }
     };
 
     return (

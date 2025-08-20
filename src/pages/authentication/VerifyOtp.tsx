@@ -1,12 +1,33 @@
 import { Button, ConfigProvider, Form, FormProps, Input } from 'antd';
-import { FieldNamesType } from 'antd/es/cascader';
 import { useNavigate } from 'react-router-dom';
+import { useOtpVerifyMutation } from '../../redux/features/authApi';
+import toast from 'react-hot-toast';
+
+type VerifyOtpFormValues = {
+    otp: string;
+};
 
 const VerifyOtp = () => {
+    const [otpVerify] = useOtpVerifyMutation();
     const navigate = useNavigate();
-    const onFinish: FormProps<FieldNamesType>['onFinish'] = (values) => {
-        console.log('Received values of form: ', values);
-        navigate('/new-password');
+    const email = new URLSearchParams(location.search).get('email');
+    const onFinish: FormProps<VerifyOtpFormValues>['onFinish'] = async (values) => {
+        if (!email) {
+            toast.error('Email is required');
+            return;
+        }
+        try {
+            const res = await otpVerify({ email, oneTimeCode: values.otp }).unwrap();
+
+            if (res?.success) {
+                navigate(`/new-password?token=${res?.data}`);
+            }
+        } catch (error) {
+            console.error('OTP verification failed:', error);
+            toast.error(
+                (error as { data?: { message?: string } })?.data?.message || 'Verify OTP failed! Try Again Please.',
+            );
+        }
     };
 
     return (
@@ -25,13 +46,16 @@ const VerifyOtp = () => {
                 },
             }}
         >
-            <div className="flex  items-center justify-center h-screen" style={{
-            backgroundImage: `url('/auth.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'top',
-            backgroundRepeat: 'no-repeat',
-            objectFit: 'cover',
-        }}>
+            <div
+                className="flex  items-center justify-center h-screen"
+                style={{
+                    backgroundImage: `url('/auth.png')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'top',
+                    backgroundRepeat: 'no-repeat',
+                    objectFit: 'cover',
+                }}
+            >
                 <div className="bg-white w-[630px] rounded-lg shadow-lg p-10 ">
                     <div className="text-primaryText space-y-3 text-center">
                         <h1 className="text-3xl  font-medium text-center mt-2">Check your email</h1>
@@ -58,7 +82,7 @@ const VerifyOtp = () => {
                                 }}
                                 className=""
                                 variant="filled"
-                                length={5}
+                                length={6}
                             />
                         </Form.Item>
 

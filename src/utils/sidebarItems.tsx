@@ -10,7 +10,7 @@ import { IoBarChartOutline, IoImagesOutline } from 'react-icons/io5';
 import { TbLogout, TbMessage2Check } from 'react-icons/tb';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { RiAlarmWarningLine } from 'react-icons/ri';
-import { BsExclamationOctagon, BsPersonGear } from 'react-icons/bs';
+import { BsPersonGear } from 'react-icons/bs';
 
 const sidebarItems: TSidebarItem[] = [
     {
