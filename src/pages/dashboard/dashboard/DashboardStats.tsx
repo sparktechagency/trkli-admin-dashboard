@@ -1,7 +1,6 @@
 
 import { BsCurrencyDollar } from 'react-icons/bs';
-import { HiCurrencyDollar, HiMiniUserGroup } from 'react-icons/hi2';
-import { IoBookmarks } from 'react-icons/io5';
+import { HiMiniUserGroup } from 'react-icons/hi2';
 import { MdDevicesOther, MdOutlineProductionQuantityLimits } from 'react-icons/md';
 
 const DashboardStats = () => {
@@ -48,7 +47,7 @@ const DashboardStats = () => {
         <div>
             <div className="grid grid-cols-4 gap-8 items-center">
                 {data.map((item, index) => (
-                    <div key={index} className="bg-white shadow-md rounded-2xl p-4  flex  flex-col  gap-2">
+                    <div key={index} className="bg-white shadow-md rounded-2xl p-4 flex flex-col gap-2">
                         <div className='flex items-center gap-3'>
                             <div className={`rounded-full flex items-center justify-center bg-[#F4E6FF] p-1.5`}>
                                 {item?.icon}

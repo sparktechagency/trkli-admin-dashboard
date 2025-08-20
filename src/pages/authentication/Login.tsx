@@ -1,12 +1,33 @@
 import { Button, Checkbox, ConfigProvider, Form, FormProps, Input } from 'antd';
-import { FieldNamesType } from 'antd/es/cascader';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '../../redux/features/authApi';
+import toast from 'react-hot-toast';
+
+type LoginFormValues = {
+    email: string;
+    password: string;
+    remember?: boolean;
+};
 
 const Login = () => {
+    const [login] = useLoginMutation();
     const navigate = useNavigate();
-    const onFinish: FormProps<FieldNamesType>['onFinish'] = (values) => {
-        console.log('Received values of form: ', values);
-        navigate('/');
+    const onFinish: FormProps<LoginFormValues>['onFinish'] = async (values) => {
+        const payload = {
+            email: values.email,
+            password: values.password,
+        };
+        try {
+            const response = await login(payload).unwrap();
+            if (response?.success) {
+                localStorage.setItem('token', JSON.stringify(response?.data?.accessToken));
+                toast.success('Login successful');
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
+            toast.error((error as { data?: { message?: string } })?.data?.message || 'Login failed! Try Again Please.');
+        }
     };
 
     return (
@@ -29,13 +50,16 @@ const Login = () => {
                 },
             }}
         >
-            <div className="flex items-center justify-center h-screen" style={{
-            backgroundImage: `url('/auth.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'top',
-            backgroundRepeat: 'no-repeat',
-            objectFit: 'cover',
-        }}>
+            <div
+                className="flex items-center justify-center h-screen"
+                style={{
+                    backgroundImage: `url('/auth.png')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'top',
+                    backgroundRepeat: 'no-repeat',
+                    objectFit: 'cover',
+                }}
+            >
                 <div className="bg-white w-[630px] rounded-lg shadow-lg p-10 ">
                     <div className="text-primaryText space-y-3 text-center">
                         <h1 className="text-3xl  font-medium text-center mt-2">Login to Account</h1>
