@@ -1,10 +1,46 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
 import { Button } from 'antd';
+import { useGetTermsConditionQuery, useUpdateTermsConditionMutation } from '../../redux/features/rulesApi';
+import toast from 'react-hot-toast';
 
 const TermsCondition = () => {
     const editor = useRef(null);
     const [content, setContent] = useState('');
+
+    const { data, refetch } = useGetTermsConditionQuery({});
+    const termsContent = data?.data?.content;
+
+    const [updateTermsCondition] = useUpdateTermsConditionMutation();
+
+    const handleSubmit = async () => {
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = content;
+        const plainText = tempElement.innerText.trim();
+
+        if (!plainText) {
+            toast.error('Content cannot be empty');
+            return;
+        }
+
+        try {
+            await updateTermsCondition({
+                content,
+            }).unwrap();
+            toast.success('Updated successfully!');
+            refetch();
+        } catch (err) {
+            console.error('Update failed', err);
+            toast.error('Failed to update');
+        }
+    };
+
+    // Set content when data is fetched
+    useEffect(() => {
+        if (termsContent) {
+            setContent(termsContent);
+        }
+    }, [termsContent]);
 
     const config = {
         readonly: false,
@@ -34,7 +70,7 @@ const TermsCondition = () => {
                     value={content}
                     config={config}
                     onBlur={(newContent) => setContent(newContent)}
-                    onChange={() => {}}
+                    // onChange={() => {}}
                 />
             </div>
             <div
@@ -46,6 +82,7 @@ const TermsCondition = () => {
                 }}
             >
                 <Button
+                    onClick={handleSubmit}
                     style={{
                         height: 40,
                         width: '150px',

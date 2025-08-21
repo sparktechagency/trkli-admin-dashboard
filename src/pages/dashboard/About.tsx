@@ -1,10 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import JoditEditor from 'jodit-react';
 import { Button } from 'antd';
+import { useGetAboutUsQuery, useUpdateAboutUsMutation } from '../../redux/features/rulesApi';
+import toast from 'react-hot-toast';
 
 const About = () => {
     const editor = useRef(null);
     const [content, setContent] = useState('');
+    const { data, refetch } = useGetAboutUsQuery({});
+    const aboutContent = data?.data?.content;
+
+    const [updateAboutUs] = useUpdateAboutUsMutation();
 
     const config = {
         readonly: false,
@@ -14,6 +20,36 @@ const About = () => {
             background: 'white',
         },
     };
+
+    const handleSubmit = async () => {
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = content;
+        const plainText = tempElement.innerText.trim();
+
+        if (!plainText) {
+            toast.error('Content cannot be empty');
+            return;
+        }
+
+        try {
+            await updateAboutUs({
+                content,
+            }).unwrap();
+            toast.success('Updated successfully!');
+            refetch();
+        } catch (err) {
+            console.error('Update failed', err);
+            toast.error('Failed to update');
+        }
+    };
+
+    // Set content when data is fetched
+    useEffect(() => {
+        if (aboutContent) {
+            setContent(aboutContent);
+        }
+    }, [aboutContent]);
+
     return (
         <div className=" bg-white px-4 py-2 rounded-lg pb-10 ">
             <div
@@ -46,6 +82,7 @@ const About = () => {
                 }}
             >
                 <Button
+                    onClick={handleSubmit}
                     style={{
                         height: 40,
                         width: '150px',
