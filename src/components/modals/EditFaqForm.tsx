@@ -49,8 +49,19 @@ const EditFaqForm = ({ onFinish, editData }: { onFinish: (values: any) => void; 
             </Form.Item>
 
             {/* Submit */}
-            <Form.Item>
-                <Button icon={<AiOutlineEdit />} htmlType="submit" style={{ height: 40 }} type="primary">
+            <Form.Item
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Button
+                    icon={<AiOutlineEdit />}
+                    htmlType="submit"
+                    style={{ height: 40, borderRadius: 50 }}
+                    type="primary"
+                >
                     Edit FAQ
                 </Button>
             </Form.Item>

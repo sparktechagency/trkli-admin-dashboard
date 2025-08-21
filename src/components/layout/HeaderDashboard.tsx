@@ -1,9 +1,14 @@
 import { Layout } from 'antd';
 import { Link } from 'react-router-dom';
+import { useProfileQuery } from '../../redux/features/authApi';
+import { imageUrl } from '../../redux/api/baseApi';
 
 const { Header } = Layout;
 
 const HeaderDashboard = () => {
+    const { data } = useProfileQuery({});
+    const profileData = data?.data;
+
     return (
         <Header
             style={{
@@ -26,8 +31,8 @@ const HeaderDashboard = () => {
                                     </div>
                                 </span>
                                 <svg
-                                    width={14}
-                                    height={16}
+                                    width={18}
+                                    height={20}
                                     viewBox="0 0 14 16"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -65,13 +70,18 @@ const HeaderDashboard = () => {
                         }}
                     >
                         <img
-                            src={'/user.svg'}
+                            src={
+                                profileData?.profile?.startsWith('http')
+                                    ? profileData.profile
+                                    : `${imageUrl}${profileData.profile}`
+                            }
                             style={{
                                 width: '44px',
                                 height: '44px',
                                 borderRadius: '50%',
                                 borderColor: '#DBB162',
                                 borderWidth: 2,
+                                objectFit: 'cover',
                             }}
                             alt=""
                         />
@@ -82,7 +92,7 @@ const HeaderDashboard = () => {
                                 fontWeight: '600',
                             }}
                         >
-                            Anonymous
+                            {profileData?.name || 'Anonymous'}
                         </h2>
                     </Link>
                 </div>
