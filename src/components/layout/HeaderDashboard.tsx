@@ -31,8 +31,8 @@ const HeaderDashboard = () => {
                                     </div>
                                 </span>
                                 <svg
-                                    width={18}
-                                    height={20}
+                                    width={20}
+                                    height={22}
                                     viewBox="0 0 14 16"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -72,8 +72,8 @@ const HeaderDashboard = () => {
                         <img
                             src={
                                 profileData?.profile?.startsWith('http')
-                                    ? profileData.profile
-                                    : `${imageUrl}${profileData.profile}`
+                                    ? profileData?.profile
+                                    : `${imageUrl}${profileData?.profile}`
                             }
                             style={{
                                 width: '44px',

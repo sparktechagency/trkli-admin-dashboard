@@ -212,7 +212,7 @@ const dummyData = [
 
 const Users = () => {
     const [makeAdminModal, setMakeAdminModal] = useState(false);
-    const [value, setValue] = useState<Record<string, any> | null>(null);
+    // const [value, setValue] = useState<Record<string, any> | null>(null);
     const navigate = useNavigate();
 
     const columns = [
