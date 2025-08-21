@@ -1,9 +1,13 @@
-import { Button, Checkbox, DatePicker, Flex, Input, Table } from 'antd';
+import { Button, DatePicker, Flex, Input, Table } from 'antd';
 import { useState } from 'react';
-import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
-import CreateWhyChooseModal from '../../components/modals/CreateWhyChooseModal';
-import { BsInfoCircle } from 'react-icons/bs';
+import { IoLockClosedOutline, IoLockOpenOutline, IoTrashOutline } from 'react-icons/io5';
 import { FiSearch } from 'react-icons/fi';
+import { useDeleteBannerMutation, useGetBannerQuery } from '../../redux/features/bannerApi';
+import { imageUrl } from '../../redux/api/baseApi';
+import { BiEdit } from 'react-icons/bi';
+import DeleteModal from '../../components/modals/DeleteModal';
+import toast from 'react-hot-toast';
+import AppSliderModal from '../../components/modals/AppSliderModal';
 
 type contentType = {
     id: string;
@@ -12,178 +16,94 @@ type contentType = {
     url: string;
 };
 
-const contentData: contentType[] = [
-    {
-        id: '1',
-        contentImage: 'https://picsum.photos/200/120?random=1',
-        contentTitle: 'Introduction to JavaScript',
-        url: 'https://example.com/javascript-introduction',
-    },
-    {
-        id: '2',
-        contentImage: 'https://picsum.photos/200/120?random=2',
-        contentTitle: 'Mastering React Basics',
-        url: 'https://example.com/react-basics',
-    },
-    {
-        id: '3',
-        contentImage: 'https://picsum.photos/200/120?random=3',
-        contentTitle: 'Advanced Node.js Guide',
-        url: 'https://example.com/nodejs-advanced',
-    },
-    {
-        id: '4',
-        contentImage: 'https://picsum.photos/200/120?random=4',
-        contentTitle: 'Getting Started with Next.js',
-        url: 'https://example.com/nextjs-start',
-    },
-    {
-        id: '5',
-        contentImage: 'https://picsum.photos/200/120?random=5',
-        contentTitle: 'UI/UX Design Principles',
-        url: 'https://example.com/ui-ux-design',
-    },
-    {
-        id: '6',
-        contentImage: 'https://picsum.photos/200/120?random=6',
-        contentTitle: 'Understanding MongoDB',
-        url: 'https://example.com/mongodb-guide',
-    },
-    {
-        id: '7',
-        contentImage: 'https://picsum.photos/200/120?random=7',
-        contentTitle: 'Docker for Beginners',
-        url: 'https://example.com/docker-beginners',
-    },
-    {
-        id: '8',
-        contentImage: 'https://picsum.photos/200/120?random=8',
-        contentTitle: 'Kubernetes Crash Course',
-        url: 'https://example.com/kubernetes-course',
-    },
-    {
-        id: '9',
-        contentImage: 'https://picsum.photos/200/120?random=9',
-        contentTitle: 'Git & GitHub Essentials',
-        url: 'https://example.com/git-github',
-    },
-    {
-        id: '10',
-        contentImage: 'https://picsum.photos/200/120?random=10',
-        contentTitle: 'Mastering Tailwind CSS',
-        url: 'https://example.com/tailwind-css',
-    },
-    {
-        id: '11',
-        contentImage: 'https://picsum.photos/200/120?random=11',
-        contentTitle: 'REST API Best Practices',
-        url: 'https://example.com/rest-api-practices',
-    },
-    {
-        id: '12',
-        contentImage: 'https://picsum.photos/200/120?random=12',
-        contentTitle: 'GraphQL Basics',
-        url: 'https://example.com/graphql-basics',
-    },
-    {
-        id: '13',
-        contentImage: 'https://picsum.photos/200/120?random=13',
-        contentTitle: 'Building with Express.js',
-        url: 'https://example.com/expressjs-guide',
-    },
-    {
-        id: '14',
-        contentImage: 'https://picsum.photos/200/120?random=14',
-        contentTitle: 'Cloud Computing 101',
-        url: 'https://example.com/cloud-computing',
-    },
-    {
-        id: '15',
-        contentImage: 'https://picsum.photos/200/120?random=15',
-        contentTitle: 'Python for Data Science',
-        url: 'https://example.com/python-data-science',
-    },
-    {
-        id: '16',
-        contentImage: 'https://picsum.photos/200/120?random=16',
-        contentTitle: 'Machine Learning Basics',
-        url: 'https://example.com/machine-learning',
-    },
-    {
-        id: '17',
-        contentImage: 'https://picsum.photos/200/120?random=17',
-        contentTitle: 'AI & Deep Learning',
-        url: 'https://example.com/ai-deep-learning',
-    },
-    {
-        id: '18',
-        contentImage: 'https://picsum.photos/200/120?random=18',
-        contentTitle: 'Cybersecurity Fundamentals',
-        url: 'https://example.com/cybersecurity-basics',
-    },
-    {
-        id: '19',
-        contentImage: 'https://picsum.photos/200/120?random=19',
-        contentTitle: 'DevOps Culture & Tools',
-        url: 'https://example.com/devops-tools',
-    },
-    {
-        id: '20',
-        contentImage: 'https://picsum.photos/200/120?random=20',
-        contentTitle: 'Agile & Scrum Guide',
-        url: 'https://example.com/agile-scrum',
-    },
-];
-
 const AppSlider = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [editData, setEditData] = useState<contentType | null>(null);
+    const [showDelete, setShowDelete] = useState(false);
+    const [deleteId, setDeleteId] = useState<string>('');
+
+    const { data, refetch } = useGetBannerQuery({});
+    const bannerData = data?.data || [];
+    const [deleteBanner] = useDeleteBannerMutation();
+
+    const handleDelete = async (id: string) => {
+        try {
+            const res = await deleteBanner(id).unwrap();
+            if (res?.success) {
+                toast.success('Slider deleted successfully');
+                setShowDelete(false);
+                refetch();
+            }
+        } catch (error) {
+            console.log('Error deleting slider:', error);
+            toast.error('Failed to delete slider');
+        }
+    };
 
     const columns = [
-                {
-            title: <Checkbox />,
-            dataIndex: 'checkbox',
-            key: 'checkbox',
-            render: () => <Checkbox />,
-            width: 50,
-        },
+        // {
+        //     title: <Checkbox />,
+        //     dataIndex: 'checkbox',
+        //     key: 'checkbox',
+        //     render: () => <Checkbox />,
+        //     width: 50,
+        // },
         {
-            title: 'S.No',
-            dataIndex: 'id',
-            key: 'id',
-            width: '100px',
+            title: 'S No',
+            key: 'serial',
+            render: (_: any, __: any, index: number) => index + 1,
         },
         {
             title: 'Image',
             dataIndex: 'contentImage',
             key: 'contentImage',
-            render: (text: string) => <img src={text} alt="class" style={{ height: 50, objectFit: 'cover' }} />,
+            render: (_: any, record: Record<string, any>) => (
+                <img
+                    src={
+                        record?.image && record?.image.startsWith('http')
+                            ? record?.image
+                            : `${imageUrl}${record?.image}`
+                    }
+                    alt="class"
+                    style={{ height: 50, objectFit: 'cover' }}
+                />
+            ),
             width: '300px',
         },
         {
             title: 'Name',
-            dataIndex: 'contentTitle',
-            key: 'contentTitle',
+            dataIndex: 'name',
+            key: 'name',
             width: '370px',
         },
         {
-            title: 'URL Link',
-            dataIndex: 'url',
-            key: 'url',
-            ellipsis: true,
+            title: 'Product Name',
+            dataIndex: 'productName',
+            key: 'productName',
+            render: (_: any, record: Record<string, any>) => <p>{record?.product?.name}</p>,
         },
         {
             title: 'Action',
             key: 'action',
-            align: 'center' as const,
-            render: () => (
-                <div className="flex justify-center items-center gap-2">
-                    <p>
-                        <BsInfoCircle size={22} color="#A1A1A1" style={{ cursor: 'pointer' }} />
-                    </p>
-                    <p>
-                        <IoLockClosedOutline size={22} color="#A1A1A1" style={{ cursor: 'pointer' }} />
-                    </p>
+            width: '150px',
+            render: (_: any, record: any) => (
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => {
+                            setIsOpen(true);
+                            setEditData(record);
+                        }}
+                    >
+                        <BiEdit className="text-2xl text-primary" />
+                    </button>
+                    <button
+                        onClick={() => {
+                            setShowDelete(true);
+                            setDeleteId(record._id);
+                        }}
+                    >
+                        <IoTrashOutline className="text-2xl text-red-500" />
+                    </button>
                 </div>
             ),
         },
@@ -239,16 +159,22 @@ const AppSlider = () => {
                             }}
                             type="primary"
                         >
-                            + Add Link
+                            + Add Slider
                         </Button>
                     </div>
                 </div>
             </Flex>
 
             <div>
-                <Table columns={columns} dataSource={contentData} pagination={{ pageSize: 8 }} />
+                <Table rowKey={'_id'} columns={columns} dataSource={bannerData} pagination={{ pageSize: 8 }} />
             </div>
-            <CreateWhyChooseModal isOpen={isOpen} setIsOpen={setIsOpen} editData={editData} setEditData={setEditData} />
+            <AppSliderModal isOpen={isOpen} setIsOpen={setIsOpen} editData={editData} setEditData={setEditData} />
+            <DeleteModal
+                showDelete={showDelete}
+                setShowDelete={setShowDelete}
+                deleteId={deleteId}
+                handleDelete={handleDelete}
+            />
         </div>
     );
 };

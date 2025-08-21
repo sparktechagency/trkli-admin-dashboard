@@ -1,6 +1,7 @@
-import { Button, Form, Input, Modal } from 'antd';
+import { Button, Form, Input, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { PiImageThin } from 'react-icons/pi';
+import { useGetProductsQuery } from '../../redux/features/productsApi';
 
 type contentType = {
     id: string;
@@ -9,7 +10,7 @@ type contentType = {
     url: string;
 };
 
-const CreateWhyChooseModal = ({
+const AppSliderModal = ({
     isOpen,
     setIsOpen,
     editData,
@@ -23,6 +24,14 @@ const CreateWhyChooseModal = ({
     const [form] = Form.useForm();
     const [imgFile, setImgFile] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | undefined>();
+    const { data: productRes } = useGetProductsQuery({});
+    const productData = productRes?.data || [];
+    const products = productData.map((item: any) => ({
+        _id: item._id,
+        name: item.name,
+    }));
+
+    console.log(products);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -99,13 +108,23 @@ const CreateWhyChooseModal = ({
                     <Input placeholder="Enter content title" style={{ height: 42 }} />
                 </Form.Item>
 
-                <Form.Item label="URL Link" name="url" rules={[{ required: true }]}>
-                    <Input placeholder="Enter URL link" style={{ height: 42 }} />
+                <Form.Item label="Category" name="category" rules={[{ required: true }]}>
+                    <Select placeholder="Select Category" style={{ height: 42 }}>
+                        {products?.map((cat: any) => (
+                            <Select.Option key={cat._id} value={cat._id}>
+                                {cat.name}
+                            </Select.Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item>
                     <div className="flex justify-center w-full mt-5">
-                        <Button type="primary" htmlType="submit" style={{ height: 40, width: '200px' , borderRadius: "50px" }}>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={{ height: 40, width: '200px', borderRadius: '50px' }}
+                        >
                             Save
                         </Button>
                     </div>
@@ -115,4 +134,4 @@ const CreateWhyChooseModal = ({
     );
 };
 
-export default CreateWhyChooseModal;
+export default AppSliderModal;
