@@ -2,28 +2,32 @@ import { Button, Form, Input, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { PiImageThin } from 'react-icons/pi';
 import { useGetProductsQuery } from '../../redux/features/productsApi';
+import { useCreateBannerMutation, useUpdateBannerMutation } from '../../redux/features/bannerApi';
+import toast from 'react-hot-toast';
+import { imageUrl } from '../../redux/api/baseApi';
 
 type contentType = {
     id: string;
     contentTitle: string;
     contentImage: string;
     url: string;
+    refetch: () => void;
 };
 
-const AppSliderModal = ({
-    isOpen,
-    setIsOpen,
-    editData,
-    setEditData,
-}: {
+interface AppSliderModalProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    editData: contentType | null;
+    editData: any;
     setEditData: (data: contentType | null) => void;
-}) => {
+    refetch: () => void;
+}
+
+const AppSliderModal = ({ isOpen, setIsOpen, editData, setEditData, refetch }: AppSliderModalProps) => {
     const [form] = Form.useForm();
     const [imgFile, setImgFile] = useState<File | null>(null);
-    const [imageUrl, setImageUrl] = useState<string | undefined>();
+    const [localImageUrl, setLocalImageUrl] = useState<string | undefined>();
+
+    // Fetch products
     const { data: productRes } = useGetProductsQuery({});
     const productData = productRes?.data || [];
     const products = productData.map((item: any) => ({
@@ -31,68 +35,104 @@ const AppSliderModal = ({
         name: item.name,
     }));
 
-    console.log(products);
+    const [createBanner] = useCreateBannerMutation();
+    const [updateBanner] = useUpdateBannerMutation();
 
+    // Handle image change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setImgFile(file);
-            setImageUrl(URL.createObjectURL(file));
+            setLocalImageUrl(URL.createObjectURL(file));
         }
     };
 
+    // Prefill form when editData is available
     useEffect(() => {
         if (editData) {
-            form.setFieldsValue(editData);
-            setImageUrl(editData.contentImage);
+            form.setFieldsValue({
+                contentTitle: editData?.name,
+                product: editData?.product?._id,
+            });
+            // Set image URL for edit mode, assuming editData.image is a relative path
+            setLocalImageUrl(editData?.image ? `${imageUrl}${editData.image}` : undefined);
+        } else {
+            // Clear form and image when not in edit mode
+            form.resetFields();
+            setImgFile(null);
+            setLocalImageUrl(undefined);
         }
-    }, [editData, form, setImageUrl]);
+    }, [editData, form, imageUrl]);
 
-    const OnFinish = (values: { contentTitle: string; description: string }) => {
-        console.log('Form Values:', {
-            ...values,
-            image: imgFile,
-        });
-        setIsOpen(false);
-        setEditData(null);
-        form.resetFields();
-        setImgFile(null);
-        setImageUrl(undefined);
+    // Submit handler
+    const onFinish = async (values: { contentTitle: string; product: string }) => {
+        const formData = new FormData();
+        formData.append('name', values.contentTitle);
+        formData.append('product', values.product);
+
+        if (imgFile) {
+            formData.append('image', imgFile);
+        }
+
+        try {
+            let res;
+            if (editData) {
+                // Update existing banner
+                res = await updateBanner({ id: editData._id, body: formData }).unwrap();
+            } else {
+                // Create new banner
+                res = await createBanner(formData).unwrap();
+            }
+
+            if (res?.success) {
+                toast.success(`App Slider ${editData ? 'updated' : 'saved'} successfully`);
+                setIsOpen(false);
+                setEditData(null);
+                form.resetFields();
+                setImgFile(null);
+                setLocalImageUrl(undefined);
+                refetch();
+            }
+        } catch (error) {
+            console.error(`Error ${editData ? 'Updating' : 'Creating'} Banner:`, error);
+            toast.error(`Failed to ${editData ? 'update' : 'create'} App Slider`);
+        }
     };
 
     return (
         <Modal
-            title={
-                <p className="text-xl text-primary font-semibold">
-                    {editData?.id ? 'Edit Content' : 'Create Content'}{' '}
-                </p>
-            }
+            title={<p className="text-xl text-primary font-semibold">{editData ? 'Edit Content' : 'Create Content'}</p>}
             open={isOpen}
             onCancel={() => {
                 setIsOpen(false);
                 form.resetFields();
                 setImgFile(null);
-                setImageUrl(undefined);
+                setLocalImageUrl(undefined);
                 setEditData(null);
             }}
             footer={null}
             width="590px"
             centered
         >
-            <Form layout="vertical" form={form} onFinish={OnFinish}>
-                {/* image */}
+            <Form layout="vertical" form={form} onFinish={onFinish}>
+                {/* Image */}
                 <div className="py-[4px] w-full mb-5">
                     <p className="text-[14px] font-semibold py-1 mb-2">Image</p>
                     <label
                         htmlFor="image"
                         className="p-3 border border-[#BABABA] rounded-lg bg-white cursor-pointer block"
                     >
-                        <div className="flex justify-center items-center w-full h-[180px] ">
-                            {imageUrl ? (
+                        <div className="flex justify-center items-center w-full h-[180px]">
+                            {localImageUrl ? (
                                 <img
-                                    src={imageUrl}
-                                    style={{ height: '170px', width: '240px', borderRadius: 10, objectFit: 'contain' }}
-                                    alt="class"
+                                    src={localImageUrl}
+                                    style={{
+                                        height: '170px',
+                                        width: '240px',
+                                        borderRadius: 10,
+                                        objectFit: 'contain',
+                                    }}
+                                    alt="preview"
                                 />
                             ) : (
                                 <PiImageThin className="text-8xl text-[#666666]" />
@@ -100,16 +140,24 @@ const AppSliderModal = ({
                         </div>
                     </label>
                     <div className="hidden">
-                        <input id="image" type="file" accept="image/*" onChange={handleChange} className=" hidden" />
+                        <input id="image" type="file" accept="image/*" onChange={handleChange} className="hidden" />
                     </div>
                 </div>
 
-                <Form.Item label="Name" name="contentTitle" rules={[{ required: true }]}>
+                <Form.Item
+                    label="Name"
+                    name="contentTitle"
+                    rules={[{ required: true, message: 'Please enter content title' }]}
+                >
                     <Input placeholder="Enter content title" style={{ height: 42 }} />
                 </Form.Item>
 
-                <Form.Item label="Category" name="category" rules={[{ required: true }]}>
-                    <Select placeholder="Select Category" style={{ height: 42 }}>
+                <Form.Item
+                    label="Product"
+                    name="product"
+                    rules={[{ required: true, message: 'Please select product' }]}
+                >
+                    <Select placeholder="Select Product" style={{ height: 42 }}>
                         {products?.map((cat: any) => (
                             <Select.Option key={cat._id} value={cat._id}>
                                 {cat.name}

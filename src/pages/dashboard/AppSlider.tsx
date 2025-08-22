@@ -168,7 +168,7 @@ const AppSlider = () => {
             <div>
                 <Table rowKey={'_id'} columns={columns} dataSource={bannerData} pagination={{ pageSize: 8 }} />
             </div>
-            <AppSliderModal isOpen={isOpen} setIsOpen={setIsOpen} editData={editData} setEditData={setEditData} />
+            <AppSliderModal isOpen={isOpen} setIsOpen={setIsOpen} refetch={refetch} editData={editData} setEditData={setEditData} />
             <DeleteModal
                 showDelete={showDelete}
                 setShowDelete={setShowDelete}
