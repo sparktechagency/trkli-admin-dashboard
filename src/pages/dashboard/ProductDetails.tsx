@@ -9,6 +9,8 @@ import { useDeleteProductMutation, useGetProductsQuery } from '../../redux/featu
 import { imageUrl } from '../../redux/api/baseApi';
 import DeleteModal from '../../components/modals/DeleteModal';
 import toast from 'react-hot-toast';
+import { useGetCategoriesQuery } from '../../redux/features/categoryApi';
+import { useSearchParams } from 'react-router-dom';
 
 export interface Product {
     _id: number;
@@ -23,29 +25,40 @@ export interface Product {
 }
 
 const ProductDetails = () => {
+    // const limit = 8;
+    // const [page, setPage] = useState(1);
     const [isOpen, setIsOpen] = useState(false);
     const [editData, setEditData] = useState<Product | null>(null);
     const [showDelete, setShowDelete] = useState(false);
     const [deleteId, setDeleteId] = useState<string>('');
+    const { data: categoryRes } = useGetCategoriesQuery({});
+    const categoryData = categoryRes?.data || [];
+    const categories = categoryData.map((item: any) => ({
+        _id: item._id,
+        name: item.name,
+    }));
 
+    const [searchParams, setSearchParams] = useSearchParams();
+    // const searchTerm = searchParams.get('searchTerm') || '';
+    // const category = '';
     const { data, refetch } = useGetProductsQuery({});
     const productsData = data?.data || [];
     const [deleteProduct] = useDeleteProductMutation({});
 
-    const categoryOption = [
-        { value: 'product1', label: 'Product 1' },
-        { value: 'product2', label: 'Product 2' },
-        { value: 'product3', label: 'Product 3' },
-    ];
+    // Handle search input change
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
 
-    // const statusOption = [
-    //     { value: 'active', label: 'Active' },
-    //     { value: 'unavailable', label: 'Unavailable' },
-    //     { value: 'short stock', label: 'Short Stock' },
-    // ];
+        const newParams = new URLSearchParams(searchParams);
+        if (newValue) {
+            newParams.set('searchTerm', newValue);
+        } else {
+            newParams.delete('searchTerm');
+        }
+        setSearchParams(newParams);
+    };
 
     const handleDelete = async (id: string) => {
-
         try {
             const res = await deleteProduct(id).unwrap();
             if (res?.success) {
@@ -209,6 +222,7 @@ const ProductDetails = () => {
 
                 <div className="flex items-center gap-2  ">
                     <Input
+                        onChange={handleSearchChange}
                         style={{
                             width: 305,
                             height: 46,
@@ -252,17 +266,14 @@ const ProductDetails = () => {
                             },
                         }}
                     >
-                        <Select
-                            placeholder="Category"
-                            style={{
-                                width: 160,
-                                height: 45,
-                                borderRadius: '50px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                border: 'none',
-                            }}
-                            options={categoryOption}
-                        />
+                        <Select placeholder="Select Category" style={{ height: 42 }}>
+                            <Select.Option value="">All Categories</Select.Option>
+                            {categories.map((cat: any) => (
+                                <Select.Option key={cat._id} value={cat._id}>
+                                    {cat.name}
+                                </Select.Option>
+                            ))}
+                        </Select>
                     </ConfigProvider>
 
                     {/* <ConfigProvider
