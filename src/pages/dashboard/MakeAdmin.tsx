@@ -1,397 +1,184 @@
-import { Button, Checkbox, ConfigProvider, DatePicker, Flex, Form, Input, Popconfirm, Table } from 'antd';
+import { Button, Flex, Form, Input, Table } from 'antd';
 import CustomModal from '../../components/shared/CustomModal';
 import { useState } from 'react';
 import { imageUrl } from '../../redux/api/baseApi';
-import { CiLock, CiUnlock } from 'react-icons/ci';
-import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
-import { FiSearch } from 'react-icons/fi';
-
-const dummyData = [
-    {
-        key: 1,
-        admin_name: 'John Doe',
-        email: 'john.doe@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/1.jpg',
-        status: 'active',
-    },
-    {
-        key: 2,
-        admin_name: 'Jane Smith',
-        email: 'jane.smith@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/2.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 3,
-        admin_name: 'Michael Johnson',
-        email: 'michael.johnson@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/3.jpg',
-        status: 'active',
-    },
-    {
-        key: 4,
-        admin_name: 'Emily Davis',
-        email: 'emily.davis@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/4.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 5,
-        admin_name: 'Robert Wilson',
-        email: 'robert.wilson@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/5.jpg',
-        status: 'active',
-    },
-    {
-        key: 6,
-        admin_name: 'Sophia Martinez',
-        email: 'sophia.martinez@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/6.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 7,
-        admin_name: 'David Anderson',
-        email: 'david.anderson@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/7.jpg',
-        status: 'active',
-    },
-    {
-        key: 8,
-        admin_name: 'Olivia Taylor',
-        email: 'olivia.taylor@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/8.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 9,
-        admin_name: 'James Thomas',
-        email: 'james.thomas@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/9.jpg',
-        status: 'active',
-    },
-    {
-        key: 10,
-        admin_name: 'Ava White',
-        email: 'ava.white@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/10.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 11,
-        admin_name: 'William Harris',
-        email: 'william.harris@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/11.jpg',
-        status: 'active',
-    },
-    {
-        key: 12,
-        admin_name: 'Isabella Martin',
-        email: 'isabella.martin@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/12.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 13,
-        admin_name: 'Ethan Garcia',
-        email: 'ethan.garcia@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/13.jpg',
-        status: 'active',
-    },
-    {
-        key: 14,
-        admin_name: 'Mia Clark',
-        email: 'mia.clark@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/14.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 15,
-        admin_name: 'Alexander Lewis',
-        email: 'alexander.lewis@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/15.jpg',
-        status: 'active',
-    },
-    {
-        key: 16,
-        admin_name: 'Charlotte Lee',
-        email: 'charlotte.lee@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/16.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 17,
-        admin_name: 'Benjamin Walker',
-        email: 'benjamin.walker@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/17.jpg',
-        status: 'active',
-    },
-    {
-        key: 18,
-        admin_name: 'Amelia Hall',
-        email: 'amelia.hall@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/18.jpg',
-        status: 'inactive',
-    },
-    {
-        key: 19,
-        admin_name: 'Daniel Allen',
-        email: 'daniel.allen@example.com',
-        admin_type: 'Admin',
-        image: 'https://randomuser.me/api/portraits/men/19.jpg',
-        status: 'active',
-    },
-    {
-        key: 20,
-        admin_name: 'Harper Young',
-        email: 'harper.young@example.com',
-        admin_type: 'Super Admin',
-        image: 'https://randomuser.me/api/portraits/women/20.jpg',
-        status: 'inactive',
-    },
-];
+import { IoTrashOutline } from 'react-icons/io5';
+import {
+  useCreateAdminMutation,
+  useDeleteAdminMutation,
+  useGetAdminsQuery,
+} from '../../redux/features/usersApi';
+import DeleteModal from '../../components/modals/DeleteModal';
+import toast from 'react-hot-toast';
 
 const MakeAdmin = () => {
-    const [makeAdminModal, setMakeAdminModal] = useState(false);
+  const [makeAdminModal, setMakeAdminModal] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState<string>('');
+  const [form] = Form.useForm();
 
-    const columns = [
-        {
-            title: <Checkbox />,
-            dataIndex: 'checkbox',
-            key: 'checkbox',
-            render: () => <Checkbox />,
-            width: 50,
-        },
-        {
-            title: 'S.No',
-            dataIndex: 'key',
-            key: 'key',
-            width: 150,
-        },
-        {
-            title: 'Admin Name',
-            dataIndex: 'admin_name',
-            key: 'admin_name',
-            render: (_: string, record: Record<string, any>) => {
-                return (
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 12,
-                        }}
-                    >
-                        <img
-                            src={
-                                record?.image && record?.image.startsWith('http')
-                                    ? record?.image
-                                    : record?.image
-                                    ? `${imageUrl}${record?.image}`
-                                    : '/default-avatar.jpg'
-                            }
-                            className="w-8 h-8 object-cover rounded-full"
-                        />
+  const { data, refetch } = useGetAdminsQuery({});
+  const adminData = data?.data;
 
-                        <p
-                            style={{
-                                letterSpacing: 0.4,
-                                fontSize: '#666666',
-                                fontWeight: '400',
-                            }}
-                        >
-                            {record?.admin_name}
-                        </p>
-                    </div>
-                );
-            },
-        },
+  const [createAdmin, { isLoading: creating }] = useCreateAdminMutation();
+  const [deleteAdmin] = useDeleteAdminMutation();
 
-        {
-            title: 'Admin Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Designation',
-            dataIndex: 'admin_type',
-            key: 'admin_type',
-        },
-        {
-            title: 'Action',
-            dataIndex: 'action',
-            key: 'action',
-            width: 150,
-            textAlign: 'center',
-            render: (_: String, record: Record<string, any>) => (
-                <Popconfirm title="Delete Admin" description="Are you sure to delete this Admin?">
-                    <button
-                        className="flex justify-center items-center rounded-md"
-                        onClick={() => setMakeAdminModal(record?._id)}
-                        style={{
-                            cursor: 'pointer',
-                            border: 'none',
-                            outline: 'none',
-                            width: '40px',
-                            height: '32px',
-                        }}
-                    >
-                        {record?.status === 'active' ? (
-                            <IoLockOpenOutline size={24} className="text-[#A1A1A1]" />
-                        ) : (
-                            <IoLockClosedOutline size={24} className="text-[#FF0000]" />
-                        )}
-                    </button>
-                </Popconfirm>
-            ),
-        },
-    ];
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await deleteAdmin(id).unwrap();
+      if (res?.success) {
+        toast.success('Admin deleted successfully');
+        setShowDelete(false);
+        refetch();
+      }
+    } catch (error) {
+      console.log('Error deleting admin:', error);
+      toast.error('Failed to delete admin');
+    }
+  };
 
-    const addAdminForm = (
-        <Form
-            style={{
-                color: '#767676',
-            }}
-            layout="vertical"
-        >
-            <Form.Item label="Name" name="name">
-                <Input
-                    style={{
-                        height: '40px',
-                    }}
-                    placeholder="John Doe"
-                />
-            </Form.Item>
-            <Form.Item label="Email">
-                <Input
-                    style={{
-                        height: '40px',
-                    }}
-                    type="email"
-                    placeholder="email@gmail.com"
-                />
-            </Form.Item>
-            <Form.Item label="Password">
-                <Input
-                    style={{
-                        height: '40px',
-                    }}
-                    type="password"
-                    placeholder="******"
-                />
-            </Form.Item>
-            <Form.Item>
-                <div className="flex justify-center w-full">
-                    <Button
-                        type="primary"
-                        style={{
-                            height: 40,
-                            width: '100%',
-                        }}
-                    >
-                        Add Admin
-                    </Button>
-                </div>
-            </Form.Item>
-        </Form>
-    );
+  // ✅ Handle form submit
+  const handleAddAdmin = async (values: any) => {
+    try {
+      const res = await createAdmin(values).unwrap();
+      if (res?.success) {
+        toast.success('Admin created successfully');
+        setMakeAdminModal(false);
+        form.resetFields();
+        refetch();
+      }
+    } catch (error) {
+      console.log('Error creating admin:', error);
+      toast.error('Failed to create admin');
+    }
+  };
 
-    return (
-        <div>
-            <Flex vertical={false} gap={10} align="center" justify="space-between">
-                <div className="w-full flex justify-between items-center mb-5">
-                    <h1 className="text-2xl text-primary font-semibold">Admin Panel</h1>
-                    <div className="flex items-center gap-2 justify-end ">
-                        <div className=" flex items-center gap-2 ">
-                            <p className=" cursor-pointer ">
-                                {' '}
-                                <IoLockOpenOutline size={24} color="#A1A1A1" />{' '}
-                            </p>
-                            <p className=" cursor-pointer ">
-                                {' '}
-                                <IoLockClosedOutline size={24} color="#A1A1A1" />{' '}
-                            </p>
-                        </div>
-                        <Input
-                            style={{
-                                width: 335,
-                                height: 46,
-                                borderRadius: '50px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                border: 'none',
-                            }}
-                            placeholder="Search"
-                            prefix={
-                                <div className="  flex items-center p-2 bg-[#F4E6FF] rounded-full">
-                                    {' '}
-                                    <FiSearch color="#8F00FF" size={20} />{' '}
-                                </div>
-                            }
-                        />
-
-                        <DatePicker
-                            style={{
-                                width: 160,
-                                height: 46,
-                                borderRadius: '50px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                border: 'none',
-                            }}
-                        />
-                        <Button
-                            onClick={() => setMakeAdminModal(true)}
-                            style={{
-                                height: 45,
-                                borderRadius: 50,
-                            }}
-                            type="primary"
-                        >
-                            + Add Admin
-                        </Button>
-                    </div>
-                </div>
-            </Flex>
-
-            <ConfigProvider
-            // theme={{
-            //     components: {
-            //         Table: {
-            //             headerBg: '#E9EFFA',
-            //             headerBorderRadius: 0,
-            //             rowHoverBg: '#F5F5F5',
-            //         },
-            //     },
-            // }}
-            >
-                <Table columns={columns} dataSource={dummyData} />
-            </ConfigProvider>
-
-            <CustomModal
-                open={makeAdminModal}
-                setOpen={setMakeAdminModal}
-                title="Make Admin"
-                width={500}
-                body={addAdminForm}
+  const columns = [
+    {
+      title: 'S No',
+      key: 'serial',
+      render: (_: any, __: any, index: number) => index + 1,
+    },
+    {
+      title: 'Admin Name',
+      dataIndex: 'admin_name',
+      key: 'admin_name',
+      render: (_: string, record: Record<string, any>) => {
+        return (
+          <div className="flex items-center gap-3">
+            <img
+              src={
+                record?.profile && record?.profile.startsWith('http')
+                  ? record?.profile
+                  : record?.profile
+                  ? `${imageUrl}${record?.profile}`
+                  : '/default-avatar.jpg'
+              }
+              className="w-8 h-8 object-cover rounded-full"
             />
+            <p className="text-gray-600">{record?.name}</p>
+          </div>
+        );
+      },
+    },
+    {
+      title: 'Admin Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      width: 150,
+      render: (_: string, record: Record<string, any>) => (
+        <button
+          onClick={() => {
+            setShowDelete(true);
+            setDeleteId(record._id);
+          }}
+        >
+          <IoTrashOutline className="text-2xl text-red-500" />
+        </button>
+      ),
+    },
+  ];
+
+  const addAdminForm = (
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleAddAdmin}
+    >
+      <Form.Item
+        label="Name"
+        name="name"
+        rules={[{ required: true, message: 'Please enter a name' }]}
+      >
+        <Input placeholder="John Doe" />
+      </Form.Item>
+
+      <Form.Item
+        label="Email"
+        name="email"
+        rules={[{ required: true, type: 'email', message: 'Enter valid email' }]}
+      >
+        <Input placeholder="email@gmail.com" />
+      </Form.Item>
+
+      <Form.Item
+        label="Password"
+        name="password"
+        rules={[{ required: true, message: 'Please enter a password' }]}
+      >
+        <Input.Password placeholder="******" />
+      </Form.Item>
+
+      <Form.Item>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={creating}
+          style={{ width: '100%', height: 40 }}
+        >
+          Add Admin
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+
+  return (
+    <div>
+      <Flex vertical={false} gap={10} align="center" justify="space-between">
+        <div className="w-full flex justify-between items-center mb-5">
+          <h1 className="text-2xl text-primary font-semibold">Admin Panel</h1>
+          <Button
+            onClick={() => setMakeAdminModal(true)}
+            style={{ height: 45, borderRadius: 50 }}
+            type="primary"
+          >
+            + Add Admin
+          </Button>
         </div>
-    );
+      </Flex>
+
+      <Table rowKey="_id" columns={columns} dataSource={adminData} />
+
+      <CustomModal
+        open={makeAdminModal}
+        setOpen={setMakeAdminModal}
+        title="Make Admin"
+        width={500}
+        body={addAdminForm}
+      />
+
+      <DeleteModal
+        showDelete={showDelete}
+        setShowDelete={setShowDelete}
+        deleteId={deleteId}
+        handleDelete={handleDelete}
+      />
+    </div>
+  );
 };
 
 export default MakeAdmin;

@@ -13,7 +13,7 @@ const EditProfile: React.FC = () => {
     const { data } = useProfileQuery({});
     const [updateProfile] = useUpdateProfileMutation();
 
-    const { email, name, profile, address, contact, occupation } = data?.data || {};
+    const { email, name, profile, address, contact, role } = data?.data || {};
 
     // set values once data is fetched
     useEffect(() => {
@@ -23,7 +23,7 @@ const EditProfile: React.FC = () => {
                 email: email,
                 address: address,
                 phone: contact,
-                designation: occupation,
+                designation: role,
             });
             if (profile) {
                 setImagePreview(profile.startsWith('http') ? profile : `${imageUrl}${profile}`);

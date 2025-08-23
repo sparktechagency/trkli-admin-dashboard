@@ -267,16 +267,16 @@ const Users = () => {
             },
         },
 
-        {
-            title: 'Reg.No',
-            dataIndex: 'regNo',
-            key: 'regNo',
-        },
-        {
-            title: 'Reg.Date',
-            dataIndex: 'regDate',
-            key: 'regDate',
-        },
+        // {
+        //     title: 'Reg.No',
+        //     dataIndex: 'regNo',
+        //     key: 'regNo',
+        // },
+        // {
+        //     title: 'Reg.Date',
+        //     dataIndex: 'regDate',
+        //     key: 'regDate',
+        // },
         {
             title: 'Email',
             dataIndex: 'email',
