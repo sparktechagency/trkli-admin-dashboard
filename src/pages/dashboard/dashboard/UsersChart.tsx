@@ -1,22 +1,12 @@
 import { ConfigProvider, DatePicker } from 'antd';
 import { FaChevronDown } from 'react-icons/fa';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-const data = [
-    { name: 'Jan', users: 8000 },
-    { name: 'Feb', users: 12000 },
-    { name: 'Mar', users: 10000 },
-    { name: 'Apr', users: 22314 },
-    { name: 'May', users: 16000 },
-    { name: 'Jun', users: 15000 },
-    { name: 'Jul', users: 11000 },
-    { name: 'Aug', users: 17000 },
-    { name: 'Sep', users: 9000 },
-    { name: 'Oct', users: 15000 },
-    { name: 'Nov', users: 14000 },
-    { name: 'Dec', users: 17000 },
-];
+import { useUserStatisticsQuery } from '../../../redux/features/statisticsApi';
 
 const UsersChart = () => {
+    const { data } = useUserStatisticsQuery({});
+    const chartData = data?.data || [];
+
     return (
         <div
             style={{
@@ -45,10 +35,10 @@ const UsersChart = () => {
                 </ConfigProvider>
             </div>
             <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis domain={[5000, 25000]} />
+                    <XAxis dataKey="month" />
+                    <YAxis />
                     <Tooltip />
                     <Line
                         type="monotone"

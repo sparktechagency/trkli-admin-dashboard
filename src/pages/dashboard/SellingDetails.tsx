@@ -1,198 +1,60 @@
-'use client';
-
-import { Table, Input, DatePicker, Select, ConfigProvider, Checkbox } from 'antd';
-import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
+import { Table, Input } from 'antd';
 import { FiSearch } from 'react-icons/fi';
 import { BsInfoCircle } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { useChangeOrderStatusMutation, useGetOrderListQuery } from '../../redux/features/orderListApi';
+import { useState } from 'react';
+import SellingDetailsModal from '../../components/modals/SellingDetailsModal';
+import toast from 'react-hot-toast';
 
 // Define the status type
-type Status = 'pending' | 'packing' | 'shipping' | 'cancelled' | 'delivered';
-
-// Define the data type for clarity
-interface Order {
-    key: string;
-    orderId: string;
-    productName: string;
-    userName: string;
-    contact: string;
-    deliveryAddress: string;
-    deliveryDate: string;
-    price: string;
-    quantity: string;
-    deliveryStatus: Status; // Use Status type here
-}
-
-const data: Order[] = [
-    {
-        key: '1',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Mr. Spatch',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'pending', // Lowercase to match Status type
-    },
-    {
-        key: '2',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Zoya Rahman',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'delivered', // Changed to match Status type
-    },
-    {
-        key: '3',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Aya Sadman',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'shipping',
-    },
-    {
-        key: '4',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Mr. Spatch',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'pending',
-    },
-    {
-        key: '5',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Mr. Spatch',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'delivered',
-    },
-    {
-        key: '6',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Fahad Osman',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'pending',
-    },
-    {
-        key: '7',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Mr. Spatch',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'shipping',
-    },
-    {
-        key: '8',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Zaima Ahsan',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'pending',
-    },
-    {
-        key: '9',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Mr. Spatch',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'pending',
-    },
-    {
-        key: '10',
-        orderId: '145818',
-        productName: 'Luggage',
-        userName: 'Saber Bhuyan',
-        contact: '+61 2569 2569',
-        deliveryAddress: '29 rue des Laitieres',
-        deliveryDate: '24 May, 2020',
-        price: '$09.30',
-        quantity: '06',
-        deliveryStatus: 'shipping',
-    },
-];
+type Status = 'pending' | 'processing' | 'OnWay' | 'cancelled' | 'completed';
 
 const statusOptions = [
     { value: 'pending', label: 'Pending' },
-    { value: 'packing', label: 'Packing' },
-    { value: 'shipping', label: 'Shipping' },
+    { value: 'processing', label: 'Processing' },
+    { value: 'OnWay', label: 'OnWay' },
     { value: 'cancelled', label: 'Cancelled' },
-    { value: 'delivered', label: 'Delivered' },
+    { value: 'completed', label: 'Delivered' },
 ];
 
 const SellingDetails = () => {
-    const navigate = useNavigate();
+    const [sellingData, setSellingData] = useState(null);
+    const { data: orderList, refetch } = useGetOrderListQuery({});
+    const orders = orderList?.data;
 
-    const productOptions = [
-        { value: 'product1', label: 'Product 1' },
-        { value: 'product2', label: 'Product 2' },
-        { value: 'product3', label: 'Product 3' },
-    ];
+    const [changeOrderStatus] = useChangeOrderStatusMutation();
+
+    // const productOptions = [
+    //     { value: 'product1', label: 'Product 1' },
+    //     { value: 'product2', label: 'Product 2' },
+    //     { value: 'product3', label: 'Product 3' },
+    // ];
 
     const statusColorMap: Record<Status, { color: string; bg: string }> = {
         pending: { color: '#D48806', bg: '#F7F1CC' },
-        packing: { color: '#1890FF', bg: '#D9EEFF' },
-        shipping: { color: '#13C2C2', bg: '#CCFAF9' },
+        processing: { color: '#1890FF', bg: '#D9EEFF' },
+        OnWay: { color: '#13C2C2', bg: '#CCFAF9' },
         cancelled: { color: '#FF4D4F', bg: '#FFD8D7' },
-        delivered: { color: '#52C41A', bg: '#D9F2CD' },
+        completed: { color: '#52C41A', bg: '#D9F2CD' },
     };
 
     const columns = [
         {
-            title: <Checkbox />,
-            dataIndex: 'checkbox',
-            key: 'checkbox',
-            render: () => <Checkbox />,
-            width: 50,
-        },
-        {
             title: 'Order Id',
-            dataIndex: 'orderId',
-            key: 'orderId',
+            dataIndex: '_id',
+            key: '_id',
         },
         {
             title: 'Product Name',
-            dataIndex: 'productName',
-            key: 'productName',
+            dataIndex: 'items',
+            key: 'items',
+            render: (items: { product: { name: string } }[]) => items?.map((item) => item.product?.name).join(', '),
         },
         {
             title: 'User Name',
             dataIndex: 'userName',
             key: 'userName',
+            render: (_: any, record: any) => <p className="text-[#080808]">{record?.user?.name}</p>,
         },
         {
             title: 'Contact',
@@ -201,67 +63,112 @@ const SellingDetails = () => {
         },
         {
             title: 'Delivery Address',
-            dataIndex: 'deliveryAddress',
-            key: 'deliveryAddress',
-        },
-        {
-            title: 'Delivery Date',
-            dataIndex: 'deliveryDate',
-            key: 'deliveryDate',
+            dataIndex: 'address',
+            key: 'address',
         },
         {
             title: 'Price',
             dataIndex: 'price',
             key: 'price',
         },
-        {
-            title: 'Quantity',
-            dataIndex: 'quantity',
-            key: 'quantity',
-        },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'deliveryStatus',
+        //     key: 'status',
+        //     render: (_: any, record: any) => {
+        //         const currentStyle = statusColorMap[record.status as Status] || {
+        //             color: '#595959',
+        //             bg: '#FAFAFA',
+        //         };
+
+        //         return (
+        //             <p
+        //                 style={{
+        //                     backgroundColor: currentStyle.bg,
+        //                     color: currentStyle.color,
+        //                     fontWeight: 400,
+        //                     borderRadius: 6,
+        //                     fontSize: 13,
+        //                     width: 120,
+        //                     height: 28,
+        //                     padding: '0 8px',
+        //                     border: 'none',
+        //                     cursor: 'default',
+        //                     textAlign: 'center',
+        //                     lineHeight: '28px',
+        //                     margin: 0,
+        //                 }}
+        //             >
+        //                 {statusOptions.find((option) => option.value === record?.status)?.label || record?.status}
+        //             </p>
+        //         );
+        //     },
+        // },
         {
             title: 'Status',
-            dataIndex: 'deliveryStatus',
+            dataIndex: 'status',
             key: 'status',
-            render: (status: Status) => {
+            render: (status: Status, record: any) => {
                 const currentStyle = statusColorMap[status] || {
                     color: '#595959',
                     bg: '#FAFAFA',
                 };
 
                 return (
-                    <p
+                    <select
+                        value={status}
+                        onChange={async (e) => {
+                            const newStatus = e.target.value;
+
+                            const data = {
+                                id: record._id,
+                                status: newStatus,
+                            };
+                            try {
+                                const res = await changeOrderStatus({ data }).unwrap();
+                                if (res?.success) {
+                                    refetch();
+                                    toast.success(res?.message);
+                                }
+                            } catch (error: any) {
+                                console.error('Failed to update status', error);
+                                toast.error(error?.data?.message);
+                            }
+                        }}
                         style={{
                             backgroundColor: currentStyle.bg,
                             color: currentStyle.color,
-                            fontWeight: 400,
+                            fontWeight: 500,
                             borderRadius: 6,
                             fontSize: 13,
                             width: 120,
                             height: 28,
                             padding: '0 8px',
                             border: 'none',
-                            cursor: 'default',
+                            cursor: 'pointer',
                             textAlign: 'center',
-                            lineHeight: '28px',
-                            margin: 0,
+                            appearance: 'none',
+                            WebkitAppearance: 'none',
+                            MozAppearance: 'none',
+                            outline: 'none',
                         }}
                     >
-                        {statusOptions.find((option) => option.value === status)?.label || status}
-                    </p>
+                        {statusOptions.map(({ value, label }) => (
+                            <option key={value} value={value} style={{ textAlign: 'center' }}>
+                                {label}
+                            </option>
+                        ))}
+                    </select>
                 );
             },
         },
         {
             title: 'Action',
             key: 'action',
-            render: () => (
+            render: (_: any, record: any) => (
                 <div className="flex items-center gap-2">
-                    <p onClick={() => navigate('/order-details')}>
+                    <p onClick={() => setSellingData(record)}>
                         <BsInfoCircle size={22} color="#A1A1A1" style={{ cursor: 'pointer' }} />
-                    </p>
-                    <p>
-                        <IoLockClosedOutline size={22} color="#A1A1A1" style={{ cursor: 'pointer' }} />
                     </p>
                 </div>
             ),
@@ -274,14 +181,6 @@ const SellingDetails = () => {
                 <h1 className="text-2xl text-[#080808] font-medium">Selling Details</h1>
 
                 <div className="flex items-center gap-2 justify-end">
-                    <div className="flex items-center gap-2">
-                        <p className="cursor-pointer">
-                            <IoLockOpenOutline size={24} color="#A1A1A1" />
-                        </p>
-                        <p className="cursor-pointer">
-                            <IoLockClosedOutline size={24} color="#A1A1A1" />
-                        </p>
-                    </div>
                     <Input
                         style={{
                             width: 335,
@@ -298,7 +197,7 @@ const SellingDetails = () => {
                         }
                     />
 
-                    <ConfigProvider
+                    {/* <ConfigProvider
                         theme={{
                             token: {
                                 borderRadius: 50,
@@ -316,21 +215,18 @@ const SellingDetails = () => {
                             }}
                             options={productOptions}
                         />
-                    </ConfigProvider>
-
-                    <DatePicker
-                        style={{
-                            width: 160,
-                            height: 46,
-                            borderRadius: '50px',
-                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                            border: 'none',
-                        }}
-                    />
+                    </ConfigProvider> */}
                 </div>
             </div>
 
-            <Table columns={columns} dataSource={data} pagination={{ pageSize: 12 }} rowClassName="hover:bg-gray-100" />
+            <Table
+                rowKey="_id"
+                columns={columns}
+                dataSource={orders}
+                pagination={{ pageSize: 12 }}
+                rowClassName="hover:bg-gray-100"
+            />
+            <SellingDetailsModal sellingData={sellingData} setSellingData={setSellingData} />
         </div>
     );
 };

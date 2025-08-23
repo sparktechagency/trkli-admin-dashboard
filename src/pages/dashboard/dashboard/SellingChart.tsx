@@ -1,22 +1,12 @@
 import { ConfigProvider, DatePicker } from 'antd';
 import { FaChevronDown } from 'react-icons/fa';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-const data = [
-    { name: 'Jan', device: 5000, product: 3000},
-    { name: 'Feb', products: 12000, device: 13000  },
-    { name: 'Mar', products: 10000, device: 12000  },
-    { name: 'Apr', products: 22314, device: 22300  },
-    { name: 'May', products: 16000, device: 16000  },
-    { name: 'Jun', products: 15000, device: 12000  },
-    { name: 'Jul', products: 11000, device: 11000  },
-    { name: 'Aug', products: 17000, device: 13000  },
-    { name: 'Sep', products: 9000, device: 9040  },
-    { name: 'Oct', products: 15000, device: 13000  },
-    { name: 'Nov', products: 14000, device: 14400  },
-    { name: 'Dec', products: 17000, device: 17400  },
-];
+import { useSellingStatisticsQuery } from '../../../redux/features/statisticsApi';
 
 const SellingChart = () => {
+    const { data } = useSellingStatisticsQuery({});
+    const chartData = data?.data || [];
+
     return (
         <div
             style={{
@@ -45,25 +35,17 @@ const SellingChart = () => {
                 </ConfigProvider>
             </div>
             <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis domain={[5000, 25000]} />
+                    <XAxis dataKey="month" />
+                    <YAxis />
                     <Tooltip />
-                    <Line
-                        type="monotone"
-                        dataKey="device"
-                        stroke="#CB8AFF" 
-                        // fill='#6C4A00' 
-                        strokeWidth={2}
-                        dot={{ fill: '#8F00FF', stroke: '#8F00FF', strokeWidth: 2, r: 4 }}
-                    /> 
 
                     <Line
                         type="monotone"
-                        dataKey="products"
-                        stroke="#8F00FF" 
-                        // fill='#6C4A00' 
+                        dataKey="sell"
+                        stroke="#8F00FF"
+                        // fill='#6C4A00'
                         strokeWidth={2}
                         dot={{ fill: '#8F00FF', stroke: '#8F00FF', strokeWidth: 2, r: 4 }}
                     />
