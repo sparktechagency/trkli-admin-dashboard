@@ -1,10 +1,7 @@
-'use client';
-
 import { Table, Input, DatePicker, Avatar } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 import { FiSearch } from 'react-icons/fi';
-import { Checkbox } from 'antd';
 import { BsInfoCircle } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
@@ -114,13 +111,6 @@ const TrackTrkli = () => {
     const navigate = useNavigate();
 
     const columns: ColumnsType<any> = [
-        {
-            title: <Checkbox />,
-            dataIndex: 'checkbox',
-            key: 'checkbox',
-            render: () => <Checkbox />,
-            width: 50,
-        },
         {
             title: 'Device ID.',
             dataIndex: 'deviceId',

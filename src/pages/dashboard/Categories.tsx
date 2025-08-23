@@ -139,7 +139,7 @@ const Categories = () => {
             </div>
 
             <div>
-                <Table rowKey="_id" columns={columns} dataSource={categoryData} pagination={{ pageSize: 8 }} />
+                <Table rowKey="_id" columns={columns} dataSource={categoryData} pagination={false} />
             </div>
             <CategoryModal
                 refetch={refetch}

@@ -18,17 +18,13 @@ const statusOptions = [
 ];
 
 const SellingDetails = () => {
+    const [page, setPage] = useState(1);
+    const [searchText, setSearchText] = useState('');
     const [sellingData, setSellingData] = useState(null);
-    const { data: orderList, refetch } = useGetOrderListQuery({});
+    const { data: orderList, refetch } = useGetOrderListQuery({ searchText, page });
     const orders = orderList?.data;
 
     const [changeOrderStatus] = useChangeOrderStatusMutation();
-
-    // const productOptions = [
-    //     { value: 'product1', label: 'Product 1' },
-    //     { value: 'product2', label: 'Product 2' },
-    //     { value: 'product3', label: 'Product 3' },
-    // ];
 
     const statusColorMap: Record<Status, { color: string; bg: string }> = {
         pending: { color: '#D48806', bg: '#F7F1CC' },
@@ -36,6 +32,11 @@ const SellingDetails = () => {
         OnWay: { color: '#13C2C2', bg: '#CCFAF9' },
         cancelled: { color: '#FF4D4F', bg: '#FFD8D7' },
         completed: { color: '#52C41A', bg: '#D9F2CD' },
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setSearchText(e.target.value);
     };
 
     const columns = [
@@ -71,39 +72,6 @@ const SellingDetails = () => {
             dataIndex: 'price',
             key: 'price',
         },
-        // {
-        //     title: 'Status',
-        //     dataIndex: 'deliveryStatus',
-        //     key: 'status',
-        //     render: (_: any, record: any) => {
-        //         const currentStyle = statusColorMap[record.status as Status] || {
-        //             color: '#595959',
-        //             bg: '#FAFAFA',
-        //         };
-
-        //         return (
-        //             <p
-        //                 style={{
-        //                     backgroundColor: currentStyle.bg,
-        //                     color: currentStyle.color,
-        //                     fontWeight: 400,
-        //                     borderRadius: 6,
-        //                     fontSize: 13,
-        //                     width: 120,
-        //                     height: 28,
-        //                     padding: '0 8px',
-        //                     border: 'none',
-        //                     cursor: 'default',
-        //                     textAlign: 'center',
-        //                     lineHeight: '28px',
-        //                     margin: 0,
-        //                 }}
-        //             >
-        //                 {statusOptions.find((option) => option.value === record?.status)?.label || record?.status}
-        //             </p>
-        //         );
-        //     },
-        // },
         {
             title: 'Status',
             dataIndex: 'status',
@@ -182,6 +150,7 @@ const SellingDetails = () => {
 
                 <div className="flex items-center gap-2 justify-end">
                     <Input
+                        onChange={handleSearchChange}
                         style={{
                             width: 335,
                             height: 46,
@@ -196,26 +165,6 @@ const SellingDetails = () => {
                             </div>
                         }
                     />
-
-                    {/* <ConfigProvider
-                        theme={{
-                            token: {
-                                borderRadius: 50,
-                            },
-                        }}
-                    >
-                        <Select
-                            placeholder="Product"
-                            style={{
-                                width: 160,
-                                height: 46,
-                                borderRadius: '50px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                border: 'none',
-                            }}
-                            options={productOptions}
-                        />
-                    </ConfigProvider> */}
                 </div>
             </div>
 
@@ -223,7 +172,12 @@ const SellingDetails = () => {
                 rowKey="_id"
                 columns={columns}
                 dataSource={orders}
-                pagination={{ pageSize: 12 }}
+                pagination={{
+                    total: orderList?.pagination?.total,
+                    current: page,
+                    pageSize: 10,
+                    onChange: (page) => setPage(page),
+                }}
                 rowClassName="hover:bg-gray-100"
             />
             <SellingDetailsModal sellingData={sellingData} setSellingData={setSellingData} />

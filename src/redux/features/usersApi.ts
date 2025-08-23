@@ -3,10 +3,9 @@ import { baseApi } from '../api/baseApi';
 const usersApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getUsers: builder.query({
-            query: () => {
+            query: ({ searchText, page }) => {
                 return {
-                    // url: `/user/all-users?searchTerm=${srcText}&page=${page}`,
-                    url: `/user/all-users`,
+                    url: `/user/all-users?searchTerm=${searchText}&page=${page}`,
                     method: 'GET',
                 };
             },
@@ -15,8 +14,7 @@ const usersApi = baseApi.injectEndpoints({
         getAdmins: builder.query({
             query: () => {
                 return {
-                    // url: `/admin&searchTerm=${srcText}&page=${page}`,
-                    url: '/admin',
+                    url: `/admin`,
                     method: 'GET',
                 };
             },

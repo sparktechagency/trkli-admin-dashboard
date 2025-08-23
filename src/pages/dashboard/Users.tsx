@@ -7,10 +7,18 @@ import { useGetUsersQuery } from '../../redux/features/usersApi';
 import dayjs from 'dayjs';
 
 const Users = () => {
+    const limit = 8;
+    const [page, setPage] = useState(1);
+    const [searchText, setSearchText] = useState('');
+
     const [makeAdminModal, setMakeAdminModal] = useState(false);
-    const { data, isLoading } = useGetUsersQuery({});
+    const { data, isLoading } = useGetUsersQuery({ searchText, page, limit });
     const users = data?.data?.users;
-    console.log(users);
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setSearchText(e.target.value);
+    };
 
     const columns = [
         {
@@ -139,6 +147,7 @@ const Users = () => {
                     <h1 className="text-2xl text-primary font-semibold">App Users</h1>
                     <div className="flex items-center gap-2 justify-end ">
                         <Input
+                            onChange={handleSearchChange}
                             style={{
                                 width: 335,
                                 height: 46,
@@ -158,7 +167,18 @@ const Users = () => {
                 </div>
             </Flex>
 
-            <Table loading={isLoading} rowKey="_id" columns={columns} dataSource={users} />
+            <Table
+                loading={isLoading}
+                rowKey="_id"
+                columns={columns}
+                dataSource={users}
+                pagination={{
+                    total: data?.pagination?.total,
+                    current: page,
+                    pageSize: limit,
+                    onChange: (page) => setPage(page),
+                }}
+            />
 
             <CustomModal
                 open={makeAdminModal}

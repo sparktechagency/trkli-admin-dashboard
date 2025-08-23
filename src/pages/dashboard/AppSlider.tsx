@@ -1,7 +1,6 @@
-import { Button, DatePicker, Flex, Input, Table } from 'antd';
+import { Button, Flex, Table } from 'antd';
 import { useState } from 'react';
-import { IoLockClosedOutline, IoLockOpenOutline, IoTrashOutline } from 'react-icons/io5';
-import { FiSearch } from 'react-icons/fi';
+import { IoTrashOutline } from 'react-icons/io5';
 import { useDeleteBannerMutation, useGetBannerQuery } from '../../redux/features/bannerApi';
 import { imageUrl } from '../../redux/api/baseApi';
 import { BiEdit } from 'react-icons/bi';
@@ -41,13 +40,6 @@ const AppSlider = () => {
     };
 
     const columns = [
-        // {
-        //     title: <Checkbox />,
-        //     dataIndex: 'checkbox',
-        //     key: 'checkbox',
-        //     render: () => <Checkbox />,
-        //     width: 50,
-        // },
         {
             title: 'S No',
             key: 'serial',
@@ -115,17 +107,7 @@ const AppSlider = () => {
                 <div className="w-full flex justify-between items-center mb-5">
                     <h1 className="text-2xl text-primary font-semibold">App Slider</h1>
                     <div className="flex items-center gap-2 justify-end ">
-                        <div className=" flex items-center gap-2 ">
-                            <p className=" cursor-pointer ">
-                                {' '}
-                                <IoLockOpenOutline size={24} color="#A1A1A1" />{' '}
-                            </p>
-                            <p className=" cursor-pointer ">
-                                {' '}
-                                <IoLockClosedOutline size={24} color="#A1A1A1" />{' '}
-                            </p>
-                        </div>
-                        <Input
+                        {/* <Input
                             style={{
                                 width: 335,
                                 height: 46,
@@ -140,17 +122,7 @@ const AppSlider = () => {
                                     <FiSearch color="#8F00FF" size={20} />{' '}
                                 </div>
                             }
-                        />
-
-                        <DatePicker
-                            style={{
-                                width: 160,
-                                height: 46,
-                                borderRadius: '50px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                border: 'none',
-                            }}
-                        />
+                        /> */}
                         <Button
                             onClick={() => setIsOpen(true)}
                             style={{
@@ -166,9 +138,15 @@ const AppSlider = () => {
             </Flex>
 
             <div>
-                <Table rowKey={'_id'} columns={columns} dataSource={bannerData} pagination={{ pageSize: 8 }} />
+                <Table rowKey={'_id'} columns={columns} dataSource={bannerData} pagination={false} />
             </div>
-            <AppSliderModal isOpen={isOpen} setIsOpen={setIsOpen} refetch={refetch} editData={editData} setEditData={setEditData} />
+            <AppSliderModal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                refetch={refetch}
+                editData={editData}
+                setEditData={setEditData}
+            />
             <DeleteModal
                 showDelete={showDelete}
                 setShowDelete={setShowDelete}

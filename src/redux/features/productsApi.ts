@@ -2,24 +2,42 @@ import { baseApi } from '../api/baseApi';
 
 const productsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        // getProducts: builder.query({
-        //   query: ({ searchTerm, category, page, limit }) => {
-        //     console.log(searchTerm, category, page, limit);
-        //     return {
-        //       method: "GET",
-        //       url: `/product?searchTerm=${searchTerm}&category=${category}&page=${page}&limit=${limit}`,
-        //     };
-        //   },
-        // }),
-
         getProducts: builder.query({
-            query: () => {
+            query: ({ searchTerm, categoryId, page = 1, limit = 10 }) => {
+                const params: Record<string, any> = {};
+
+                if (searchTerm !== undefined && searchTerm !== null && searchTerm.trim() !== '') {
+                    params.searchTerm = searchTerm;
+                }
+
+                if (categoryId !== undefined && categoryId !== null && categoryId.trim() !== '') {
+                    params.category = categoryId;
+                }
+
+                if (page !== undefined && page !== null) {
+                    params.page = page;
+                }
+
+                if (limit !== undefined && limit !== null) {
+                    params.limit = limit;
+                }
+
                 return {
                     method: 'GET',
-                    url: `/product`,
+                    url: '/product',
+                    params,
                 };
             },
         }),
+
+        // getProducts: builder.query({
+        //     query: () => {
+        //         return {
+        //             method: 'GET',
+        //             url: `/product`,
+        //         };
+        //     },
+        // }),
 
         createProduct: builder.mutation({
             query: (payload) => {

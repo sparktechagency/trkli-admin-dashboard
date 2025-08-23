@@ -10,7 +10,6 @@ import { imageUrl } from '../../redux/api/baseApi';
 import DeleteModal from '../../components/modals/DeleteModal';
 import toast from 'react-hot-toast';
 import { useGetCategoriesQuery } from '../../redux/features/categoryApi';
-import { useSearchParams } from 'react-router-dom';
 
 export interface Product {
     _id: number;
@@ -25,37 +24,30 @@ export interface Product {
 }
 
 const ProductDetails = () => {
-    // const limit = 8;
-    // const [page, setPage] = useState(1);
+    const limit = 8;
+    const [page, setPage] = useState(1);
+    const [searchText, setSearchText] = useState('');
+    const [categoryId, setCategoryId] = useState<string | null>(null);
+
     const [isOpen, setIsOpen] = useState(false);
     const [editData, setEditData] = useState<Product | null>(null);
     const [showDelete, setShowDelete] = useState(false);
     const [deleteId, setDeleteId] = useState<string>('');
-    const { data: categoryRes } = useGetCategoriesQuery({});
+    const { data: categoryRes } = useGetCategoriesQuery({ searchText, page, limit });
     const categoryData = categoryRes?.data || [];
     const categories = categoryData.map((item: any) => ({
         _id: item._id,
         name: item.name,
     }));
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    // const searchTerm = searchParams.get('searchTerm') || '';
-    // const category = '';
-    const { data, refetch } = useGetProductsQuery({});
+    const { data, refetch } = useGetProductsQuery({ limit, page, searchTerm: searchText, categoryId });
     const productsData = data?.data || [];
     const [deleteProduct] = useDeleteProductMutation({});
 
     // Handle search input change
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-
-        const newParams = new URLSearchParams(searchParams);
-        if (newValue) {
-            newParams.set('searchTerm', newValue);
-        } else {
-            newParams.delete('searchTerm');
-        }
-        setSearchParams(newParams);
+        e.preventDefault();
+        setSearchText(e.target.value);
     };
 
     const handleDelete = async (id: string) => {
@@ -239,26 +231,6 @@ const ProductDetails = () => {
                         }
                     />
 
-                    {/* <ConfigProvider
-                        theme={{
-                            token: {
-                                borderRadius: 50,
-                            },
-                        }}
-                    >
-                        <Select
-                            placeholder="Brand"
-                            style={{
-                                width: 160,
-                                height: 45,
-                                borderRadius: '50px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                border: 'none',
-                            }}
-                            options={brandOptions}
-                        />
-                    </ConfigProvider> */}
-
                     <ConfigProvider
                         theme={{
                             token: {
@@ -266,7 +238,13 @@ const ProductDetails = () => {
                             },
                         }}
                     >
-                        <Select placeholder="Select Category" style={{ height: 42 }}>
+                        <Select
+                            placeholder="Select Category"
+                            style={{ height: 42 }}
+                            onChange={(value) => {
+                                setCategoryId(value);
+                            }}
+                        >
                             <Select.Option value="">All Categories</Select.Option>
                             {categories.map((cat: any) => (
                                 <Select.Option key={cat._id} value={cat._id}>
@@ -275,26 +253,6 @@ const ProductDetails = () => {
                             ))}
                         </Select>
                     </ConfigProvider>
-
-                    {/* <ConfigProvider
-                        theme={{
-                            token: {
-                                borderRadius: 50,
-                            },
-                        }}
-                    >
-                        <Select
-                            placeholder="Status"
-                            style={{
-                                width: 160,
-                                height: 45,
-                                borderRadius: '50px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                border: 'none',
-                            }}
-                            options={statusOption}
-                        />
-                    </ConfigProvider> */}
 
                     <Button
                         onClick={() => setIsOpen(true)}
@@ -310,7 +268,17 @@ const ProductDetails = () => {
             </div>
 
             <div>
-                <Table rowKey="_id" columns={columns} dataSource={productsData} pagination={{ pageSize: 10 }} />
+                <Table
+                    rowKey="_id"
+                    columns={columns}
+                    dataSource={productsData}
+                    pagination={{
+                        total: data?.pagination?.total,
+                        current: page,
+                        pageSize: limit,
+                        onChange: (page) => setPage(page),
+                    }}
+                />
             </div>
             <ProductItemModal
                 refetch={refetch}
