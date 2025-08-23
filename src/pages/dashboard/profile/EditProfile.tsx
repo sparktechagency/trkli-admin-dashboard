@@ -3,6 +3,7 @@ import { Button, Form, Input } from 'antd';
 import { CiEdit } from 'react-icons/ci';
 import { useProfileQuery, useUpdateProfileMutation } from '../../../redux/features/authApi';
 import { imageUrl } from '../../../redux/api/baseApi';
+import toast from 'react-hot-toast';
 
 const EditProfile: React.FC = () => {
     const [imagePreview, setImagePreview] = useState<string>('');
@@ -38,15 +39,18 @@ const EditProfile: React.FC = () => {
             formData.append('occupation', values.designation);
             formData.append('contact', values.phone);
             formData.append('address', values.address);
-            ``;
+
             if (file) {
                 formData.append('image', file);
             }
 
             const res = await updateProfile(formData).unwrap();
-            console.log('Profile updated:', res);
+            if (res?.success) {
+                toast.success('Profile updated successfully!');
+            }
         } catch (error) {
             console.error('Update failed:', error);
+            toast.error('Profile update failed!');
         }
     };
 

@@ -53,7 +53,7 @@ const SellingChart = () => {
                     <Line
                         type="monotone"
                         dataKey="device"
-                        stroke="#f4e6ff" 
+                        stroke="#CB8AFF" 
                         // fill='#6C4A00' 
                         strokeWidth={2}
                         dot={{ fill: '#8F00FF', stroke: '#8F00FF', strokeWidth: 2, r: 4 }}
@@ -62,7 +62,7 @@ const SellingChart = () => {
                     <Line
                         type="monotone"
                         dataKey="products"
-                        stroke="#CB8AFF" 
+                        stroke="#8F00FF" 
                         // fill='#6C4A00' 
                         strokeWidth={2}
                         dot={{ fill: '#8F00FF', stroke: '#8F00FF', strokeWidth: 2, r: 4 }}

@@ -11,6 +11,7 @@ import { TbLogout, TbMessage2Check } from 'react-icons/tb';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { RiAlarmWarningLine } from 'react-icons/ri';
 import { BsPersonGear } from 'react-icons/bs';
+import { MdOutlineCategory } from 'react-icons/md';
 
 const sidebarItems: TSidebarItem[] = [
     {
@@ -55,12 +56,12 @@ const sidebarItems: TSidebarItem[] = [
         path: 'app-slider',
         icon: <IoImagesOutline size={24} />,
     },
-    // {
-    //     key: 'reviews',
-    //     label: 'Reviews',
-    //     path: 'reviews',
-    //     icon: <AiOutlineStar size={24} />,
-    // },
+    {
+        key: 'categories',
+        label: 'Categories',
+        path: 'categories',
+        icon: <MdOutlineCategory size={24} />,
+    },
     // {
     //     key: 'companies',
     //     label: 'Companies',

@@ -21,6 +21,7 @@ import About from '../pages/dashboard/About';
 import AppSlider from '../pages/dashboard/AppSlider';
 import Users from '../pages/dashboard/Users';
 import UserDetails from '../pages/dashboard/UserDetails';
+import Categories from '../pages/dashboard/Categories';
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
             { path: 'order-details', element: <OrderDetails /> },
             { path: 'selling-details', element: <SellingDetails /> },
             { path: 'product-details', element: <ProductDetails /> },
+            { path: 'categories', element: <Categories /> },
             { path: 'users', element: <Users /> },
             { path: 'user-details', element: <UserDetails /> },
             { path: 'app-slider', element: <AppSlider /> },
