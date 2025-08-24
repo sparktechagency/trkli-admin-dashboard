@@ -22,7 +22,7 @@ const HeaderDashboard = () => {
                 <div>
                     {/*notification icons */}
 
-                    <Link to={'/notification'}>
+                    {/* <Link to={'/notification'}>
                         <div className="size-10 bg-[#F2F2F2] rounded-full flex items-center justify-center ">
                             <button className="py-4 px-1 relative border-2 border-transparent text-gray-800 rounded-full hover:text-gray-400 focus:outline-none focus:text-gray-500 transition duration-150 ease-in-out">
                                 <span className="absolute inset-0 -top-4  -mr-6">
@@ -52,7 +52,7 @@ const HeaderDashboard = () => {
                                 </svg>
                             </button>
                         </div>
-                    </Link>
+                    </Link> */}
                 </div>
                 <div>
                     {/* profile */}

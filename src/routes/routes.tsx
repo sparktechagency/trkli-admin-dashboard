@@ -22,11 +22,12 @@ import AppSlider from '../pages/dashboard/AppSlider';
 import Users from '../pages/dashboard/Users';
 import UserDetails from '../pages/dashboard/UserDetails';
 import Categories from '../pages/dashboard/Categories';
+import PrivateRoute from './PrivateProvider';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App />,
+        element: <PrivateRoute> <App /> </PrivateRoute>,
         errorElement: <ErrorPage />,
         children: [
             { path: '', element: <Dashboard /> },

@@ -9,8 +9,8 @@ const DashboardStats = () => {
             name: 'Total User',
             icon: <HiMiniUserGroup color="#8F00FF" size={20} />,
             time: "13 dec 2023",
-            total: "20.10K",
-            daily: "1.2K",
+            total: "5",
+            daily: "2",
             bgColor: '#fff',
             textColor: '#8F00FF',
         },
@@ -18,8 +18,8 @@ const DashboardStats = () => {
             name: 'Total Selling Device',
             icon: <MdDevicesOther color="#8F00FF" size={20} />,
             time: "13 dec 2023",
-            total: "20.10K",
-            daily: "1.2K",
+            total: "10",
+            daily: "3",
             textColor: '#3F0D47',
             bgColor: '#fff',
         },
@@ -27,8 +27,8 @@ const DashboardStats = () => {
             name: 'Total Selling product',
             icon: <MdOutlineProductionQuantityLimits color="#8F00FF" size={20} />,
             time: "13 dec 2023",
-            total: "20.10K",
-            daily: "1.2K",
+            total: "5",
+            daily: "1",
             textColor: '#DAA520',
             bgColor: '#fff',
         },
@@ -36,8 +36,8 @@ const DashboardStats = () => {
             name: 'Total Earning',
             icon: <BsCurrencyDollar color="#8F00FF" size={20} />,
             time: "13 dec 2023",
-            total: "20.10K",
-            daily: "1.2K",
+            total: "200",
+            daily: "65",
             textColor: '#3F0D47',
             bgColor: '#fff',
         },
@@ -59,7 +59,7 @@ const DashboardStats = () => {
                             </div>
                         </div> 
 
-                        <p className=' text-[#999999] text-[14px]  '>{item?.time} </p>
+                        {/* <p className=' text-[#999999] text-[14px]  '>{item?.time} </p>  */}
 
                         <div className=' flex items-center justify-between'>
                             <p className="text-base font-medium flex items-center gap-2" >

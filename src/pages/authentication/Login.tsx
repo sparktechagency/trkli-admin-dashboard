@@ -22,7 +22,8 @@ const Login = () => {
             if (response?.success) {
                 localStorage.setItem('token', JSON.stringify(response?.data?.accessToken));
                 toast.success('Login successful');
-                navigate('/');
+                navigate('/'); 
+                window.location.reload()
             }
         } catch (error) {
             console.error('Login failed:', error);
